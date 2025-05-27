@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "public": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ],
+  "env": {
+    "GROQ_API_KEY": "@groq-api-key"
+  }
+}
