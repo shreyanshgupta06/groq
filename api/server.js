@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const fetch = require('node-fetch');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit'); // Add this
 
 dotenv.config();
 
@@ -8,11 +10,17 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(cors());
 
-// Serve static files (e.g., your index.html)
+// Add rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // Limit each IP to 100 requests per windowMs
+});
+app.use('/api/', limiter);
+
 app.use(express.static('public'));
 
-// Proxy endpoint to forward requests to Groq API
 app.post('/api/groq', async (req, res) => {
   try {
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
