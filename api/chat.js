@@ -7,8 +7,19 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Log environment variables to debug (visible in Vercel logs)
+  console.log('GROQ_API_KEY:', process.env.GROQ_API_KEY);
+  console.log('GROQ_API_URL:', process.env.GROQ_API_URL);
+  console.log('GROQ_MODEL:', process.env.GROQ_MODEL);
+
+  // Check if environment variables are defined
+  if (!process.env.GROQ_API_KEY || !process.env.GROQ_API_URL || !process.env.GROQ_MODEL) {
+    res.status(500).json({ error: 'Environment variables are missing' });
+    return;
+  }
+
   try {
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const groqResponse = await fetch(process.env.GROQ_API_URL, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
@@ -16,11 +27,18 @@ module.exports = async (req, res) => {
         'x-groq-api-key': process.env.GROQ_API_KEY
       },
       body: JSON.stringify({
-        model: 'llama3-70b-8192',
+        model: process.env.GROQ_MODEL,
         messages: req.body.messages,
         stream: true
       })
     });
+
+    if (!groqResponse.ok) {
+      const errorData = await groqResponse.json();
+      console.error('Groq API error:', errorData);
+      res.status(groqResponse.status).json({ error: 'Failed to fetch from Groq API', details: errorData });
+      return;
+    }
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
