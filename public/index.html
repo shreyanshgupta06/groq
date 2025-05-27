@@ -65,7 +65,7 @@
         }
 
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: var(--bg-secondary);
             border-right: 1px solid var(--border);
             display: flex;
@@ -140,6 +140,16 @@
         .model-provider {
             font-size: 0.75rem;
             color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .model-details {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
         }
 
         .stats {
@@ -588,6 +598,7 @@
             <div class="model-info" id="modelInfo">
                 <div class="model-name">Select a model</div>
                 <div class="model-provider">Choose from available AI models</div>
+                <div class="model-details">Model details will appear here</div>
             </div>
             
             <div class="stats">
@@ -601,6 +612,10 @@
                 <div class="stat-item">
                     <span class="stat-label">Messages</span>
                     <span class="stat-value" id="messageCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Current Model</span>
+                    <span class="stat-value" id="currentModelName">None</span>
                 </div>
             </div>
             
@@ -618,7 +633,7 @@
             <div class="header">
                 <div class="header-title">AI Assistant</div>
                 <div class="header-actions">
-                    <button class="icon-btn" id="refreshBtn" title="Refresh">
+                    <button class="icon-btn" id="refreshBtn" title="Refresh Models">
                         🔄
                     </button>
                     <button class="icon-btn" id="settingsBtn" title="Settings">
@@ -630,7 +645,7 @@
             <div class="chat-container" id="chatContainer">
                 <div class="welcome-screen" id="welcomeScreen">
                     <div class="welcome-title">Welcome to Shreyansh Cloud</div>
-                    <div class="welcome-subtitle">Your intelligent AI assistant powered by multiple models</div>
+                    <div class="welcome-subtitle">Your intelligent AI assistant powered by DeepSeek R1, Llama 3, and GPT-3.5</div>
                     <div class="suggestions">
                         <div class="suggestion" data-prompt="Explain quantum computing in simple terms">
                             <div class="suggestion-title">🔬 Science</div>
@@ -696,6 +711,7 @@
                 this.toggleThemeBtn = document.getElementById('toggleTheme');
                 this.connectionStatus = document.getElementById('connectionStatus');
                 this.messageCountEl = document.getElementById('messageCount');
+                this.currentModelNameEl = document.getElementById('currentModelName');
                 this.refreshBtn = document.getElementById('refreshBtn');
             }
             
@@ -733,6 +749,11 @@
                     }
                     
                     const data = await response.json();
+                    
+                    if (!data.success) {
+                        throw new Error(data.error || 'Failed to load models');
+                    }
+                    
                     this.models = data.models || [];
                     
                     this.populateModelSelect();
@@ -741,7 +762,7 @@
                 } catch (error) {
                     console.error('Failed to load models:', error);
                     this.updateConnectionStatus('offline', 'Offline');
-                    this.showError('Failed to connect to AI services. Please check your configuration.');
+                    this.showError(`Failed to connect to AI services: ${error.message}`);
                 }
             }
             
@@ -779,7 +800,11 @@
                     this.modelInfo.innerHTML = `
                         <div class="model-name">${model.name}</div>
                         <div class="model-provider">${model.provider}</div>
+                        <div class="model-details">Model: ${model.model}</div>
                     `;
+                    this.currentModelNameEl.textContent = model.model;
+                } else {
+                    this.currentModelNameEl.textContent = 'None';
                 }
             }
             
@@ -832,6 +857,10 @@
                     }
                     
                     const data = await response.json();
+                    
+                    if (!data.success) {
+                        throw new Error(data.error || 'Failed to get response');
+                    }
                     
                     this.hideTypingIndicator();
                     this.addMessage('assistant', data.response);
