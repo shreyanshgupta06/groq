@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
       return;
     }
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
