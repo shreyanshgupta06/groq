@@ -202,11 +202,6 @@
       background-color: var(--background-tertiary);
     }
 
-    .header-actions button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -258,63 +253,6 @@
       color: var(--user-message-text);
     }
 
-    /* Markdown styling for AI messages */
-    .message.ai .message-content h1,
-    .message.ai .message-content h2,
-    .message.ai .message-content h3,
-    .message.ai .message-content h4,
-    .message.ai .message-content h5,
-    .message.ai .message-content h6 {
-      margin: 16px 0 8px 0;
-      color: var(--primary-color);
-    }
-
-    .message.ai .message-content p {
-      margin: 8px 0;
-    }
-
-    .message.ai .message-content ul,
-    .message.ai .message-content ol {
-      margin: 8px 0;
-      padding-left: 20px;
-    }
-
-    .message.ai .message-content li {
-      margin: 4px 0;
-    }
-
-    .message.ai .message-content blockquote {
-      border-left: 4px solid var(--primary-color);
-      padding-left: 16px;
-      margin: 12px 0;
-      color: var(--text-secondary);
-      font-style: italic;
-    }
-
-    .message.ai .message-content code {
-      background-color: var(--background-tertiary);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-    }
-
-    .message.ai .message-content pre {
-      background-color: #282c34;
-      color: #abb2bf;
-      padding: 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 12px 0;
-      position: relative;
-    }
-
-    .message.ai .message-content pre code {
-      background: none;
-      padding: 0;
-      color: inherit;
-    }
-
     .typing-indicator {
       display: flex;
       padding: 15px 25px;
@@ -355,26 +293,6 @@
       background-color: var(--background-tertiary);
       border-radius: var(--border-radius);
       overflow: hidden;
-      border: 2px solid transparent;
-      transition: border-color 0.2s;
-    }
-
-    .input-container:focus-within {
-      border-color: var(--primary-color);
-    }
-
-    #file-upload-button {
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 18px;
-      padding: 15px;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    #file-upload-button:hover {
-      color: var(--primary-color);
     }
 
     textarea {
@@ -385,10 +303,8 @@
       font-size: 15px;
       resize: none;
       max-height: 150px;
-      min-height: 50px;
       color: var(--text-primary);
       outline: none;
-      font-family: inherit;
     }
 
     textarea::placeholder {
@@ -403,18 +319,10 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    #send-button:hover:not(:disabled) {
+    #send-button:hover {
       background-color: var(--secondary-color);
-    }
-
-    #send-button:disabled {
-      background-color: var(--text-secondary);
-      cursor: not-allowed;
     }
 
     .disclaimer {
@@ -471,6 +379,21 @@
       transform: translateY(-2px);
     }
 
+    pre {
+      background-color: #282c34;
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      margin: 10px 0;
+      border: 1px solid #3e4451;
+      color: #edf0f7;
+    }
+
+    code {
+      font-family: "Fira Code", "Courier New", Courier, monospace;
+      font-size: 14px;
+    }
+
     .error-message {
       background-color: #fee;
       color: #c33;
@@ -479,36 +402,6 @@
       margin: 20px;
       border: 1px solid #fcc;
       text-align: center;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 20px;
-      color: var(--text-secondary);
-    }
-
-    /* Copy button for code blocks */
-    .code-copy-button {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #ddd;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: background-color 0.2s;
-    }
-
-    .code-copy-button:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .code-copy-button.copied {
-      background: #4caf50;
-      color: white;
     }
   </style>
 </head>
@@ -531,7 +424,7 @@
         </div>
       </div>
       <div class="header-actions">
-        <button id="regenerate-response" title="Regenerate response" disabled>
+        <button id="regenerate-response" title="Regenerate response">
           <i class="fas fa-sync"></i>
         </button>
         <button id="stop-response" title="Stop generating" style="display: none">
@@ -543,21 +436,26 @@
       </div>
     </div>
     <div class="messages" id="messages">
-      <div class="loading">Loading models...</div>
+      <div class="intro-message">
+        <h1>Welcome to Shreyansh Cloud</h1>
+        <p>🔒 Secure multi-model AI chat deployed on Vercel.</p>
+        <div class="suggestion-chips">
+          <button class="suggestion-chip">Tell me a story</button>
+          <button class="suggestion-chip">Explain quantum computing</button>
+          <button class="suggestion-chip">Write a poem</button>
+          <button class="suggestion-chip">Help me learn JavaScript</button>
+        </div>
+      </div>
     </div>
     <div class="input-area">
       <div class="input-container">
-        <button id="file-upload-button" title="Upload File">
-          <i class="fas fa-paperclip"></i>
-        </button>
-        <input type="file" id="file-upload" style="display: none" />
-        <textarea id="user-input" placeholder="Type your message here..." rows="1" disabled></textarea>
-        <button id="send-button" title="Send message" disabled>
+        <textarea id="user-input" placeholder="Type your message here..." rows="1"></textarea>
+        <button id="send-button" title="Send message">
           <i class="fas fa-paper-plane"></i>
         </button>
       </div>
       <div class="disclaimer">
-        🔒 Your API keys are secure on the server. Shreyansh Cloud may produce inaccurate information.
+        🔒 Deployed on Vercel. Your API keys are secure on the server.
       </div>
     </div>
   </div>
@@ -568,7 +466,6 @@
     let messages = [];
     let isTyping = false;
     let currentTheme = localStorage.getItem("theme") || "light";
-    let abortController = null;
 
     // DOM Elements
     const messagesContainer = document.getElementById("messages");
@@ -584,17 +481,12 @@
     // Initialize
     async function init() {
       try {
-        // Load available models from server
         const response = await fetch('/api/models');
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
         const data = await response.json();
         models = data.models;
         
         if (models.length === 0) {
-          showError('No AI models configured. Please check your .env file and restart the server.');
+          showError('No AI models configured. Please check your environment variables.');
           return;
         }
         
@@ -603,38 +495,31 @@
         
       } catch (error) {
         console.error('Failed to load models:', error);
-        showError('Failed to connect to server. Please make sure the server is running on the correct port.');
+        showError('Failed to connect to API. Please check your deployment.');
       }
     }
 
     function setupUI() {
-      // Enable inputs
-      userInput.disabled = false;
-      sendButton.disabled = false;
-      regenerateResponseButton.disabled = false;
-      
-      // Setup theme
       if (currentTheme === "dark") {
         document.body.classList.add("dark-mode");
         toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
       }
       
-      // Setup models
       setupModels();
       
-      // Show intro
-      showIntro();
-      
-      // Event listeners
-      userInput.addEventListener("input", handleInputChange);
+      userInput.addEventListener("input", autoResizeTextarea);
       sendButton.addEventListener("click", handleSendMessage);
-      userInput.addEventListener("keydown", handleKeyDown);
+      userInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          handleSendMessage();
+        }
+      });
       
       toggleThemeButton.addEventListener("click", toggleTheme);
       regenerateResponseButton.addEventListener("click", regenerateLastResponse);
       stopResponseButton.addEventListener("click", stopResponse);
       
-      // Model dropdown
       modelDropdown.addEventListener("click", (e) => {
         e.stopPropagation();
         modelDropdownContent.classList.toggle("show");
@@ -644,12 +529,10 @@
         modelDropdownContent.classList.remove("show");
       });
       
-      // Suggestion chips
       document.addEventListener('click', (e) => {
         if (e.target.classList.contains('suggestion-chip')) {
           userInput.value = e.target.textContent;
-          userInput.focus();
-          updateSendButton();
+          handleSendMessage();
         }
       });
     }
@@ -673,7 +556,6 @@
           currentModel = model;
           selectedModelName.textContent = model.name;
           
-          // Update selected state
           document.querySelectorAll(".model-option").forEach(opt => opt.classList.remove("selected"));
           option.classList.add("selected");
           
@@ -682,21 +564,6 @@
         
         modelDropdownContent.appendChild(option);
       });
-    }
-
-    function showIntro() {
-      messagesContainer.innerHTML = `
-        <div class="intro-message">
-          <h1>Welcome to Shreyansh Cloud</h1>
-          <p>🔒 Secure multi-model AI chat. Your API keys are safely stored on the server.</p>
-          <div class="suggestion-chips">
-            <button class="suggestion-chip">Tell me a story</button>
-            <button class="suggestion-chip">Explain quantum computing</button>
-            <button class="suggestion-chip">Write a poem</button>
-            <button class="suggestion-chip">Help me learn JavaScript</button>
-          </div>
-        </div>
-      `;
     }
 
     function showError(message) {
@@ -708,38 +575,18 @@
       `;
     }
 
-    function handleInputChange() {
-      autoResizeTextarea();
-      updateSendButton();
-    }
-
-    function handleKeyDown(e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSendMessage();
-      }
-    }
-
-    function updateSendButton() {
-      const hasText = userInput.value.trim().length > 0;
-      sendButton.disabled = !hasText || isTyping;
-    }
-
     async function handleSendMessage() {
       if (isTyping || !currentModel) return;
       
       const message = userInput.value.trim();
       if (!message) return;
       
-      // Clear intro if it's the first message
       if (messages.length === 0) {
         messagesContainer.innerHTML = '';
       }
       
-      // Clear input and update UI
       userInput.value = "";
       userInput.style.height = "auto";
-      updateSendButton();
       
       addMessageToUI("user", message);
       messages.push({ role: "user", content: message });
@@ -750,16 +597,13 @@
       } catch (error) {
         removeTypingIndicator();
         addMessageToUI("ai", `Sorry, I encountered an error: ${error.message}`);
-        console.error('Chat error:', error);
       }
     }
 
     async function getAIResponse() {
       isTyping = true;
-      updateUIForTyping(true);
-      
-      // Create abort controller for this request
-      abortController = new AbortController();
+      regenerateResponseButton.style.display = "none";
+      stopResponseButton.style.display = "inline-block";
       
       try {
         const response = await fetch('/api/chat', {
@@ -770,20 +614,18 @@
           body: JSON.stringify({
             messages: messages,
             model: currentModel.id
-          }),
-          signal: abortController.signal
+          })
         });
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'API request failed');
         }
         
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let accumulatedText = "";
         
-        // Create message element
         const messageDiv = document.createElement("div");
         messageDiv.className = "message ai";
         const messageContent = document.createElement("div");
@@ -804,7 +646,10 @@
             if (line.startsWith('data: ')) {
               const data = line.slice(6).trim();
               if (data === '[DONE]') {
-                finishResponse(accumulatedText);
+                isTyping = false;
+                stopResponseButton.style.display = "none";
+                regenerateResponseButton.style.display = "inline-block";
+                messages.push({ role: "assistant", content: accumulatedText });
                 return;
               }
               
@@ -812,90 +657,20 @@
                 const parsed = JSON.parse(data);
                 if (parsed.content) {
                   accumulatedText += parsed.content;
-                  // Use safe HTML rendering
-                  renderMarkdownSafely(messageContent, accumulatedText);
-                  scrollToBottom();
+                  messageContent.innerHTML = marked.parse(accumulatedText);
+                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 }
               } catch (e) {
                 // Ignore parse errors
-                console.warn('Failed to parse streaming data:', e);
               }
             }
           }
         }
         
-        finishResponse(accumulatedText);
-        
       } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Request was aborted');
-          return;
-        }
         console.error('Chat error:', error);
         throw error;
       }
-    }
-
-    function finishResponse(text) {
-      isTyping = false;
-      updateUIForTyping(false);
-      messages.push({ role: "assistant", content: text });
-      abortController = null;
-    }
-
-    function updateUIForTyping(typing) {
-      isTyping = typing;
-      updateSendButton();
-      regenerateResponseButton.disabled = typing;
-      stopResponseButton.style.display = typing ? "inline-block" : "none";
-      regenerateResponseButton.style.display = typing ? "none" : "inline-block";
-    }
-
-    function renderMarkdownSafely(element, text) {
-      try {
-        // Clean the text to prevent issues
-        const cleanText = text.replace(/^\s*!+\s*/, ''); // Remove leading exclamation marks
-        element.innerHTML = marked.parse(cleanText);
-        
-        // Add copy buttons to code blocks
-        const codeBlocks = element.querySelectorAll('pre code');
-        codeBlocks.forEach(addCopyButton);
-        
-        // Highlight code
-        element.querySelectorAll('pre code').forEach((block) => {
-          hljs.highlightElement(block);
-        });
-      } catch (error) {
-        console.warn('Markdown rendering error:', error);
-        element.textContent = text; // Fallback to plain text
-      }
-    }
-
-    function addCopyButton(codeElement) {
-      const pre = codeElement.parentElement;
-      if (pre.querySelector('.code-copy-button')) return; // Already has button
-      
-      const button = document.createElement('button');
-      button.className = 'code-copy-button';
-      button.textContent = 'Copy';
-      button.title = 'Copy code';
-      
-      button.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(codeElement.textContent);
-          button.textContent = 'Copied!';
-          button.classList.add('copied');
-          setTimeout(() => {
-            button.textContent = 'Copy';
-            button.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          console.error('Failed to copy:', err);
-        }
-      });
-      
-      pre.style.position = 'relative';
-      pre.appendChild(button);
     }
 
     function addMessageToUI(sender, content) {
@@ -905,14 +680,14 @@
       messageContent.className = "message-content";
       
       if (sender === "ai") {
-        renderMarkdownSafely(messageContent, content);
+        messageContent.innerHTML = marked.parse(content);
       } else {
         messageContent.textContent = content;
       }
       
       messageDiv.appendChild(messageContent);
       messagesContainer.appendChild(messageDiv);
-      scrollToBottom();
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     function showTypingIndicator() {
@@ -925,7 +700,7 @@
         typingDiv.appendChild(dot);
       }
       messagesContainer.appendChild(typingDiv);
-      scrollToBottom();
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     function removeTypingIndicator() {
@@ -933,10 +708,6 @@
       if (typingIndicator) {
         typingIndicator.remove();
       }
-    }
-
-    function scrollToBottom() {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     function toggleTheme() {
@@ -959,27 +730,21 @@
         if (messageElements.length > 0) {
           messageElements[messageElements.length - 1].remove();
         }
-        getAIResponse().catch(error => {
-          addMessageToUI("ai", `Sorry, I encountered an error: ${error.message}`);
-        });
+        getAIResponse();
       }
     }
 
     function stopResponse() {
-      if (abortController) {
-        abortController.abort();
-      }
       isTyping = false;
-      updateUIForTyping(false);
-      removeTypingIndicator();
+      stopResponseButton.style.display = "none";
+      regenerateResponseButton.style.display = "inline-block";
     }
 
     function autoResizeTextarea() {
       userInput.style.height = "auto";
-      userInput.style.height = Math.min(userInput.scrollHeight, 150) + "px";
+      userInput.style.height = userInput.scrollHeight + "px";
     }
 
-    // Start the app
     init();
   </script>
 </body>
