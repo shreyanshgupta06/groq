@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shreyansh Cloud - Secure Multi-Model Chat</title>
+  <title>Shreyansh Cloud</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
@@ -63,6 +63,37 @@
       padding: 20px;
     }
 
+    .code-copy-container {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 10;
+    }
+
+    .code-copy-button {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ddd;
+      border: none;
+      border-radius: 4px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .code-copy-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .code-copy-button.copied {
+      background-color: #4caf50;
+      color: white;
+    }
+
     .app-container {
       width: 100%;
       max-width: 800px;
@@ -87,97 +118,6 @@
       font-weight: 600;
       font-size: 16px;
       color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .model-selector {
-      position: relative;
-      display: inline-block;
-    }
-
-    .model-dropdown {
-      background: var(--background-tertiary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      color: var(--text-primary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 200px;
-    }
-
-    .model-dropdown:hover {
-      background: var(--background-secondary);
-    }
-
-    .model-dropdown-content {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--background-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px var(--shadow-color);
-      z-index: 1000;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .model-dropdown-content.show {
-      display: block;
-    }
-
-    .model-option {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .model-option:last-child {
-      border-bottom: none;
-    }
-
-    .model-option:hover {
-      background: var(--background-tertiary);
-    }
-
-    .model-option.selected {
-      background: var(--primary-color);
-      color: white;
-    }
-
-    .model-info {
-      flex: 1;
-    }
-
-    .model-name {
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .model-description {
-      font-size: 12px;
-      opacity: 0.7;
-      margin-top: 2px;
-    }
-
-    .model-icon {
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
     }
 
     .header-actions {
@@ -192,7 +132,7 @@
       color: var(--text-secondary);
       cursor: pointer;
       font-size: 16px;
-      padding: 8px;
+      padding: 5px;
       border-radius: 5px;
       transition: color 0.2s, background-color 0.2s;
     }
@@ -200,6 +140,26 @@
     .header-actions button:hover {
       color: var(--primary-color);
       background-color: var(--background-tertiary);
+    }
+
+    .model-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .model-dropdown {
+      background-color: var(--background-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      min-width: 120px;
+    }
+
+    .model-dropdown:hover {
+      background-color: var(--background-secondary);
     }
 
     .messages {
@@ -231,8 +191,6 @@
       border-radius: var(--border-radius);
       font-size: 15px;
       line-height: 1.5;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
     }
 
     .message.ai {
@@ -251,6 +209,108 @@
     .message.user .message-content {
       background-color: var(--user-message-bg);
       color: var(--user-message-text);
+    }
+
+    .message.ai .message-content h1 {
+      font-size: 22px;
+      margin: 16px 0 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--primary-color);
+    }
+
+    .message.ai .message-content h2 {
+      font-size: 18px;
+      margin: 14px 0 8px;
+    }
+
+    .message.ai .message-content h3 {
+      font-size: 16px;
+      margin: 12px 0 6px;
+    }
+
+    .message.ai .message-content ul,
+    .message.ai .message-content ol {
+      margin: 8px 0;
+      padding-left: 25px;
+    }
+
+    .message.ai .message-content li {
+      margin-bottom: 5px;
+    }
+
+    .message.ai .message-content blockquote {
+      border-left: 4px solid var(--primary-color);
+      padding: 0 0 0 15px;
+      margin: 10px 0;
+      color: var(--text-secondary);
+    }
+
+    .message.ai .message-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    .message.ai .message-content th,
+    .message.ai .message-content td {
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .message.ai .message-content th {
+      background-color: var(--background-tertiary);
+      font-weight: 600;
+    }
+
+    .message.ai .message-content a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .message.ai .message-content a:hover {
+      text-decoration: underline;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-addition {
+      color: #c792ea;
+    }
+
+    .hljs-number,
+    .hljs-string,
+    .hljs-doctag,
+    .hljs-regexp {
+      color: #89ca78;
+    }
+
+    .hljs-title,
+    .hljs-section,
+    .hljs-built_in,
+    .hljs-name {
+      color: #e2b93d;
+    }
+
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-selector-id,
+    .hljs-class .hljs-title {
+      color: #7fdbca;
+    }
+
+    .hljs-type,
+    .hljs-tag {
+      color: #e06c75;
+    }
+
+    .message.ai .message-content hr {
+      border: none;
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 15px 0;
     }
 
     .typing-indicator {
@@ -295,6 +355,19 @@
       overflow: hidden;
     }
 
+    #file-upload-button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 18px;
+      padding: 15px;
+      cursor: pointer;
+    }
+
+    #file-upload-button:hover {
+      color: var(--primary-color);
+    }
+
     textarea {
       flex: 1;
       border: none;
@@ -315,7 +388,7 @@
       background-color: var(--primary-color);
       color: white;
       border: none;
-      width: 50px;
+      width: 40px;
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.2s;
@@ -330,6 +403,11 @@
       color: var(--text-secondary);
       text-align: center;
       margin-top: 10px;
+    }
+
+    #pending-file-preview {
+      display: none;
+      margin: 10px 0;
     }
 
     .intro-message {
@@ -380,9 +458,11 @@
     }
 
     pre {
+      position: relative;
       background-color: #282c34;
       border-radius: 8px;
       padding: 12px;
+      padding-top: 35px;
       overflow-x: auto;
       margin: 10px 0;
       border: 1px solid #3e4451;
@@ -394,36 +474,37 @@
       font-size: 14px;
     }
 
-    .error-message {
-      background-color: #fee;
-      color: #c33;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 20px;
-      border: 1px solid #fcc;
-      text-align: center;
+    pre code {
+      white-space: pre;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    :not(pre) > code {
+      background-color: rgba(125, 125, 125, 0.1);
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: var(--primary-color);
+    }
+
+    .current-model {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
     }
   </style>
 </head>
 <body>
   <div class="app-container">
     <div class="chat-header">
-      <div class="chat-title">
-        🔒 Shreyansh Cloud
-        <div class="model-selector">
-          <div class="model-dropdown" id="model-dropdown">
-            <div class="model-icon">🤖</div>
-            <div class="model-info">
-              <div class="model-name" id="selected-model-name">Loading...</div>
-            </div>
-            <i class="fas fa-chevron-down"></i>
-          </div>
-          <div class="model-dropdown-content" id="model-dropdown-content">
-            <!-- Models will be populated here -->
-          </div>
-        </div>
-      </div>
+      <div class="chat-title">Shreyansh Cloud</div>
       <div class="header-actions">
+        <div class="model-selector">
+          <select class="model-dropdown" id="model-selector">
+            <!-- Options will be populated dynamically based on configured APIs -->
+          </select>
+          <div class="current-model" id="current-model">Using: API 1</div>
+        </div>
         <button id="regenerate-response" title="Regenerate response">
           <i class="fas fa-sync"></i>
         </button>
@@ -438,7 +519,7 @@
     <div class="messages" id="messages">
       <div class="intro-message">
         <h1>Welcome to Shreyansh Cloud</h1>
-        <p>🔒 Secure multi-model AI chat deployed on Vercel.</p>
+        <p>Ask me anything. I support multiple AI models.</p>
         <div class="suggestion-chips">
           <button class="suggestion-chip">Tell me a story</button>
           <button class="suggestion-chip">Explain quantum computing</button>
@@ -449,303 +530,769 @@
     </div>
     <div class="input-area">
       <div class="input-container">
+        <button id="file-upload-button" title="Upload File">
+          <i class="fas fa-paperclip"></i>
+        </button>
+        <input type="file" id="file-upload" style="display: none" />
         <textarea id="user-input" placeholder="Type your message here..." rows="1"></textarea>
         <button id="send-button" title="Send message">
           <i class="fas fa-paper-plane"></i>
         </button>
       </div>
+      <div id="pending-file-preview"></div>
       <div class="disclaimer">
-        🔒 Deployed on Vercel. Your API keys are secure on the server.
+        Shreyansh Cloud may produce inaccurate information.
       </div>
     </div>
   </div>
 
   <script>
-    let models = [];
-    let currentModel = null;
-    let messages = [];
-    let isTyping = false;
-    let currentTheme = localStorage.getItem("theme") || "light";
+    // Environment Variables Configuration
+    // In a real deployment, these would come from your .env file
+    const ENV_CONFIG = {
+      API1_KEY: "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", // Replace with your actual API key
+      API1_ENDPOINT: "https://api.groq.com/openai/v1/chat/completions",
+      API1_MODEL: "llama3-70b-8192",
+      API1_NAME: "Groq",
 
-    // DOM Elements
-    const messagesContainer = document.getElementById("messages");
-    const userInput = document.getElementById("user-input");
-    const sendButton = document.getElementById("send-button");
-    const toggleThemeButton = document.getElementById("toggle-theme");
-    const regenerateResponseButton = document.getElementById("regenerate-response");
-    const stopResponseButton = document.getElementById("stop-response");
-    const modelDropdown = document.getElementById("model-dropdown");
-    const modelDropdownContent = document.getElementById("model-dropdown-content");
-    const selectedModelName = document.getElementById("selected-model-name");
+      API2_KEY: "", // Add your OpenAI API key
+      API2_ENDPOINT: "https://api.openai.com/v1/chat/completions",
+      API2_MODEL: "gpt-4",
+      API2_NAME: "OpenAI",
 
-    // Initialize
-    async function init() {
-      try {
-        const response = await fetch('/api/models');
-        const data = await response.json();
-        models = data.models;
-        
-        if (models.length === 0) {
-          showError('No AI models configured. Please check your environment variables.');
-          return;
+      API3_KEY: "", // Add your Claude API key
+      API3_ENDPOINT: "https://api.anthropic.com/v1/messages",
+      API3_MODEL: "claude-3-sonnet-20240229",
+      API3_NAME: "Claude",
+
+      API4_KEY: "", // Add your Gemini API key
+      API4_ENDPOINT: "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+      API4_MODEL: "gemini-pro",
+      API4_NAME: "Gemini",
+
+      API5_KEY: "", // Add your custom API key
+      API5_ENDPOINT: "", // Add your custom endpoint
+      API5_MODEL: "custom-model",
+      API5_NAME: "Custom",
+
+      API6_KEY: "", // Add your local API key (if needed)
+      API6_ENDPOINT: "http://localhost:11434/v1/chat/completions", // Example for Ollama
+      API6_MODEL: "llama2",
+      API6_NAME: "Local"
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // DOM Elements
+      const messagesContainer = document.getElementById("messages");
+      const userInput = document.getElementById("user-input");
+      const sendButton = document.getElementById("send-button");
+      const toggleThemeButton = document.getElementById("toggle-theme");
+      const regenerateResponseButton = document.getElementById("regenerate-response");
+      const stopResponseButton = document.getElementById("stop-response");
+      const suggestionChips = document.querySelectorAll(".suggestion-chip");
+      const fileUploadButton = document.getElementById("file-upload-button");
+      const fileUploadInput = document.getElementById("file-upload");
+      const modelSelector = document.getElementById("model-selector");
+      const currentModelDisplay = document.getElementById("current-model");
+
+      // State variables
+      let messages = [];
+      let isTyping = false;
+      let currentTheme = localStorage.getItem("theme") || "light";
+      let currentAPI = localStorage.getItem("selectedAPI") || "api1";
+      let typingSpeed = 2;
+      let letterTimeout = null;
+      let pendingFile = null;
+      let stopGeneration = false;
+
+      // Helper function for stable markdown rendering
+      function getStableRendering(text) {
+        let parts = text.split("\`\`\`");
+        if (parts.length % 2 === 1) {
+          return marked.parse(text);
+        } else {
+          let closedPart = parts.slice(0, parts.length - 1).join("\`\`\`");
+          let openPart = parts[parts.length - 1];
+          return marked.parse(closedPart) + marked.parse("\`\`\`" + openPart + "\n\`\`\`");
         }
-        
-        currentModel = models[0];
-        setupUI();
-        
-      } catch (error) {
-        console.error('Failed to load models:', error);
-        showError('Failed to connect to API. Please check your deployment.');
       }
-    }
 
-    function setupUI() {
-      if (currentTheme === "dark") {
-        document.body.classList.add("dark-mode");
-        toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
-      }
-      
-      setupModels();
-      
-      userInput.addEventListener("input", autoResizeTextarea);
-      sendButton.addEventListener("click", handleSendMessage);
-      userInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          handleSendMessage();
-        }
-      });
-      
-      toggleThemeButton.addEventListener("click", toggleTheme);
-      regenerateResponseButton.addEventListener("click", regenerateLastResponse);
-      stopResponseButton.addEventListener("click", stopResponse);
-      
-      modelDropdown.addEventListener("click", (e) => {
-        e.stopPropagation();
-        modelDropdownContent.classList.toggle("show");
-      });
-      
-      document.addEventListener("click", () => {
-        modelDropdownContent.classList.remove("show");
-      });
-      
-      document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('suggestion-chip')) {
-          userInput.value = e.target.textContent;
-          handleSendMessage();
-        }
-      });
-    }
-
-    function setupModels() {
-      selectedModelName.textContent = currentModel.name;
-      
-      modelDropdownContent.innerHTML = "";
-      models.forEach((model, index) => {
-        const option = document.createElement("div");
-        option.className = `model-option ${index === 0 ? 'selected' : ''}`;
-        option.innerHTML = `
-          <div class="model-icon">${model.icon}</div>
-          <div class="model-info">
-            <div class="model-name">${model.name}</div>
-            <div class="model-description">${model.description}</div>
-          </div>
-        `;
+      // Get current API configuration
+      function getCurrentAPIConfig() {
+        const apiKey = ENV_CONFIG[`${currentAPI.toUpperCase()}_KEY`];
+        const endpoint = ENV_CONFIG[`${currentAPI.toUpperCase()}_ENDPOINT`];
+        const model = ENV_CONFIG[`${currentAPI.toUpperCase()}_MODEL`];
+        const name = ENV_CONFIG[`${currentAPI.toUpperCase()}_NAME`];
         
-        option.addEventListener("click", () => {
-          currentModel = model;
-          selectedModelName.textContent = model.name;
-          
-          document.querySelectorAll(".model-option").forEach(opt => opt.classList.remove("selected"));
-          option.classList.add("selected");
-          
-          modelDropdownContent.classList.remove("show");
+        return { apiKey, endpoint, model, name };
+      }
+
+      // Initialize application
+      init();
+
+      function init() {
+        if (currentTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        // Populate model selector with only configured APIs
+        populateModelSelector();
+
+        userInput.addEventListener("input", autoResizeTextarea);
+        sendButton.addEventListener("click", handleSendMessage);
+        userInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+          }
         });
-        
-        modelDropdownContent.appendChild(option);
-      });
-    }
 
-    function showError(message) {
-      messagesContainer.innerHTML = `
-        <div class="error-message">
-          <h3>⚠️ Error</h3>
-          <p>${message}</p>
-        </div>
-      `;
-    }
-
-    async function handleSendMessage() {
-      if (isTyping || !currentModel) return;
-      
-      const message = userInput.value.trim();
-      if (!message) return;
-      
-      if (messages.length === 0) {
-        messagesContainer.innerHTML = '';
-      }
-      
-      userInput.value = "";
-      userInput.style.height = "auto";
-      
-      addMessageToUI("user", message);
-      messages.push({ role: "user", content: message });
-      
-      try {
-        showTypingIndicator();
-        await getAIResponse();
-      } catch (error) {
-        removeTypingIndicator();
-        addMessageToUI("ai", `Sorry, I encountered an error: ${error.message}`);
-      }
-    }
-
-    async function getAIResponse() {
-      isTyping = true;
-      regenerateResponseButton.style.display = "none";
-      stopResponseButton.style.display = "inline-block";
-      
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            messages: messages,
-            model: currentModel.id
-          })
+        toggleThemeButton.addEventListener("click", toggleTheme);
+        regenerateResponseButton.addEventListener("click", regenerateLastResponse);
+        stopResponseButton.addEventListener("click", () => {
+          stopGeneration = true;
+          clearTimeout(letterTimeout);
+          stopResponseButton.style.display = "none";
+          regenerateResponseButton.style.display = "inline-block";
         });
+
+        modelSelector.addEventListener("change", (e) => {
+          currentAPI = e.target.value;
+          localStorage.setItem("selectedAPI", currentAPI);
+          updateCurrentModelDisplay();
+        });
+
+        fileUploadButton.addEventListener("click", () => {
+          fileUploadInput.click();
+        });
+
+        fileUploadInput.addEventListener("change", (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            pendingFile = file;
+            displayPendingFilePreview(file);
+          }
+        });
+
+        suggestionChips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            userInput.value = chip.textContent;
+            handleSendMessage();
+          });
+        });
+      }
+
+      function populateModelSelector() {
+        const modelSelector = document.getElementById("model-selector");
+        modelSelector.innerHTML = ''; // Clear existing options
         
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'API request failed');
-        }
+        const configuredModels = [];
         
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let accumulatedText = "";
-        
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message ai";
-        const messageContent = document.createElement("div");
-        messageContent.className = "message-content";
-        messageDiv.appendChild(messageContent);
-        messagesContainer.appendChild(messageDiv);
-        
-        removeTypingIndicator();
-        
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+        // Check each API and add to selector if configured
+        for (let i = 1; i <= 6; i++) {
+          const apiKey = ENV_CONFIG[`API${i}_KEY`];
+          const apiName = ENV_CONFIG[`API${i}_NAME`];
           
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
-          
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6).trim();
-              if (data === '[DONE]') {
-                isTyping = false;
-                stopResponseButton.style.display = "none";
-                regenerateResponseButton.style.display = "inline-block";
-                messages.push({ role: "assistant", content: accumulatedText });
-                return;
-              }
-              
-              try {
-                const parsed = JSON.parse(data);
-                if (parsed.content) {
-                  accumulatedText += parsed.content;
-                  messageContent.innerHTML = marked.parse(accumulatedText);
-                  messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
-              } catch (e) {
-                // Ignore parse errors
-              }
-            }
+          if (apiKey && apiKey.trim() !== '') {
+            configuredModels.push({
+              value: `api${i}`,
+              name: `API ${i} - ${apiName}`
+            });
           }
         }
         
-      } catch (error) {
-        console.error('Chat error:', error);
-        throw error;
-      }
-    }
-
-    function addMessageToUI(sender, content) {
-      const messageDiv = document.createElement("div");
-      messageDiv.className = `message ${sender}`;
-      const messageContent = document.createElement("div");
-      messageContent.className = "message-content";
-      
-      if (sender === "ai") {
-        messageContent.innerHTML = marked.parse(content);
-      } else {
-        messageContent.textContent = content;
-      }
-      
-      messageDiv.appendChild(messageContent);
-      messagesContainer.appendChild(messageDiv);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-      const typingDiv = document.createElement("div");
-      typingDiv.className = "typing-indicator";
-      typingDiv.id = "typing-indicator";
-      for (let i = 0; i < 3; i++) {
-        const dot = document.createElement("div");
-        dot.className = "typing-dot";
-        typingDiv.appendChild(dot);
-      }
-      messagesContainer.appendChild(typingDiv);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    function removeTypingIndicator() {
-      const typingIndicator = document.getElementById("typing-indicator");
-      if (typingIndicator) {
-        typingIndicator.remove();
-      }
-    }
-
-    function toggleTheme() {
-      if (currentTheme === "light") {
-        document.body.classList.add("dark-mode");
-        currentTheme = "dark";
-        toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
-      } else {
-        document.body.classList.remove("dark-mode");
-        currentTheme = "light";
-        toggleThemeButton.innerHTML = '<i class="fas fa-moon"></i>';
-      }
-      localStorage.setItem("theme", currentTheme);
-    }
-
-    function regenerateLastResponse() {
-      if (messages.length > 0 && messages[messages.length - 1].role === "assistant") {
-        messages.pop();
-        const messageElements = document.querySelectorAll(".message.ai");
-        if (messageElements.length > 0) {
-          messageElements[messageElements.length - 1].remove();
+        // If no models configured, show message
+        if (configuredModels.length === 0) {
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = 'No APIs configured';
+          option.disabled = true;
+          modelSelector.appendChild(option);
+          return;
         }
-        getAIResponse();
+        
+        // Add configured models to selector
+        configuredModels.forEach(model => {
+          const option = document.createElement('option');
+          option.value = model.value;
+          option.textContent = model.name;
+          modelSelector.appendChild(option);
+        });
+        
+        // Set first available model as default
+        currentAPI = configuredModels[0].value;
+        modelSelector.value = currentAPI;
+        localStorage.setItem("selectedAPI", currentAPI);
+        updateCurrentModelDisplay();
       }
-    }
 
-    function stopResponse() {
-      isTyping = false;
-      stopResponseButton.style.display = "none";
-      regenerateResponseButton.style.display = "inline-block";
-    }
+      function updateCurrentModelDisplay() {
+        const config = getCurrentAPIConfig();
+        currentModelDisplay.textContent = `Using: ${config.name}`;
+      }
 
-    function autoResizeTextarea() {
-      userInput.style.height = "auto";
-      userInput.style.height = userInput.scrollHeight + "px";
-    }
+      function displayPendingFilePreview(file) {
+        const previewContainer = document.getElementById("pending-file-preview");
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          let previewHTML = "";
+          if (file.type.startsWith("image/")) {
+            previewHTML = `<img src="${e.target.result}" alt="${file.name}" style="max-width: 100px; max-height: 100px;"/>`;
+          } else if (file.type.startsWith("text/") || file.type === "application/json") {
+            let content = e.target.result;
+            if (content.length > 200) {
+              content = content.substring(0, 200) + "...";
+            }
+            previewHTML = `<pre style="white-space: pre-wrap; font-size: 12px;">${escapeHtml(content)}</pre>`;
+          } else {
+            previewHTML = `<div style="font-size: 12px;">${file.name}</div>`;
+          }
+          previewContainer.innerHTML = previewHTML;
+          previewContainer.style.display = "block";
+        };
 
-    init();
+        if (file.type.startsWith("image/")) {
+          reader.readAsDataURL(file);
+        } else {
+          reader.readAsText(file);
+        }
+      }
+
+      function processPendingFile() {
+        return new Promise((resolve, reject) => {
+          const file = pendingFile;
+          if (!file) {
+            resolve();
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            let previewHTML = "";
+            if (file.type.startsWith("image/")) {
+              previewHTML = `<img src="${e.target.result}" alt="${file.name}" style="max-width:100%;"/>`;
+            } else if (file.type.startsWith("text/") || file.type === "application/json") {
+              previewHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(e.target.result)}</pre>`;
+            } else {
+              previewHTML = `<div>Uploaded file: ${file.name}</div>`;
+            }
+            addFileMessageToUI("user", previewHTML);
+            messages.push({
+              role: "user",
+              content: previewHTML,
+              file: {
+                name: file.name,
+                type: file.type,
+                content: e.target.result
+              }
+            });
+            const previewContainer = document.getElementById("pending-file-preview");
+            previewContainer.style.display = "none";
+            previewContainer.innerHTML = "";
+            pendingFile = null;
+            resolve();
+          };
+
+          if (file.type.startsWith("image/")) {
+            reader.readAsDataURL(file);
+          } else {
+            reader.readAsText(file);
+          }
+        });
+      }
+
+      function escapeHtml(text) {
+        const map = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+        };
+        return text.replace(/[&<>"']/g, (m) => map[m]);
+      }
+
+      function addFileMessageToUI(sender, htmlContent) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+        const messageContent = document.createElement("div");
+        messageContent.className = "message-content";
+        messageContent.innerHTML = htmlContent;
+        messageDiv.appendChild(messageContent);
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      async function handleSendMessage() {
+        if (isTyping) {
+          alert("Please wait until the current response is completed.");
+          return;
+        }
+        
+        const message = userInput.value.trim();
+        if (!message && !pendingFile) return;
+
+        // Check if any APIs are configured
+        const hasConfiguredAPI = Object.keys(ENV_CONFIG)
+          .filter(key => key.endsWith('_KEY'))
+          .some(key => ENV_CONFIG[key] && ENV_CONFIG[key].trim() !== '');
+          
+        if (!hasConfiguredAPI) {
+          alert('No AI APIs are configured. Please add your API keys to the ENV_CONFIG.');
+          return;
+        }
+
+        // Check if current API is configured
+        const config = getCurrentAPIConfig();
+        if (!config.apiKey || !config.endpoint || config.apiKey.trim() === '') {
+          alert(`Please configure ${config.name} API key in the ENV_CONFIG.`);
+          return;
+        }
+
+        userInput.value = "";
+        userInput.style.height = "auto";
+
+        if (message) {
+          addMessageToUI("user", message);
+          messages.push({ role: "user", content: message });
+        }
+
+        if (pendingFile) {
+          await processPendingFile();
+        }
+
+        try {
+          showTypingIndicator();
+          const response = await getAIResponse();
+          messages.push({ role: "assistant", content: response });
+        } catch (error) {
+          removeTypingIndicator();
+          addMessageToUIWithTypingEffect("ai", `Sorry, I encountered an error: ${error.message}`);
+        }
+      }
+
+      async function getAIResponse() {
+        isTyping = true;
+        stopGeneration = false;
+        regenerateResponseButton.style.display = "none";
+        stopResponseButton.style.display = "inline-block";
+
+        const config = getCurrentAPIConfig();
+
+        try {
+          const headers = {
+            "Content-Type": "application/json"
+          };
+
+          // Set authorization header based on API
+          if (currentAPI === "api1") { // Groq
+            headers["Authorization"] = `Bearer ${config.apiKey}`;
+            headers["x-groq-api-key"] = config.apiKey;
+          } else if (currentAPI === "api2") { // OpenAI
+            headers["Authorization"] = `Bearer ${config.apiKey}`;
+          } else if (currentAPI === "api3") { // Claude
+            headers["x-api-key"] = config.apiKey;
+            headers["anthropic-version"] = "2023-06-01";
+          } else if (currentAPI === "api4") { // Gemini
+            // Gemini uses API key in URL
+          } else {
+            // Default authorization
+            headers["Authorization"] = `Bearer ${config.apiKey}`;
+          }
+
+          let requestBody;
+          let url = config.endpoint;
+
+          // Prepare request body based on API
+          if (currentAPI === "api3") { // Claude
+            requestBody = {
+              model: config.model,
+              max_tokens: 1000,
+              messages: messages.map(msg => ({
+                role: msg.role === "assistant" ? "assistant" : "user",
+                content: msg.content
+              })),
+              stream: true
+            };
+          } else if (currentAPI === "api4") { // Gemini
+            url += `?key=${config.apiKey}`;
+            requestBody = {
+              contents: messages.filter(msg => msg.role === "user").map(msg => ({
+                parts: [{ text: msg.content }]
+              }))
+            };
+          } else {
+            // Standard OpenAI-compatible format
+            requestBody = {
+              model: config.model,
+              messages: messages,
+              stream: true
+            };
+          }
+
+          const response = await fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(requestBody)
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || `Failed to get response from ${config.name} API`);
+          }
+
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message ai";
+          const messageContent = document.createElement("div");
+          messageContent.className = "message-content";
+          messageDiv.appendChild(messageContent);
+          messagesContainer.appendChild(messageDiv);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+          let typingBuffer = "";
+          let accumulatedText = "";
+          let isProcessingBuffer = false;
+
+          function processBuffer() {
+            if (typingBuffer.length > 0 && !stopGeneration) {
+              accumulatedText += typingBuffer[0];
+              typingBuffer = typingBuffer.slice(1);
+              messageContent.innerHTML = getStableRendering(accumulatedText);
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+              setTimeout(processBuffer, typingSpeed);
+            } else {
+              isProcessingBuffer = false;
+            }
+          }
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            buffer += chunk;
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const jsonStr = line.slice("data: ".length).trim();
+                if (jsonStr === "[DONE]") break;
+                try {
+                  const obj = JSON.parse(jsonStr);
+                  let text = "";
+                  
+                  // Parse response based on API
+                  if (currentAPI === "api3") { // Claude
+                    if (obj.type === "content_block_delta" && obj.delta && obj.delta.text) {
+                      text = obj.delta.text;
+                    }
+                  } else if (currentAPI === "api4") { // Gemini
+                    if (obj.candidates && obj.candidates[0] && obj.candidates[0].content && obj.candidates[0].content.parts) {
+                      text = obj.candidates[0].content.parts[0].text || "";
+                    }
+                  } else {
+                    // Standard OpenAI-compatible format
+                    if (obj.choices && obj.choices[0] && obj.choices[0].delta) {
+                      text = obj.choices[0].delta.content || "";
+                    }
+                  }
+                  
+                  if (text) {
+                    typingBuffer += text;
+                    if (!isProcessingBuffer) {
+                      isProcessingBuffer = true;
+                      processBuffer();
+                    }
+                  }
+                } catch (e) {
+                  // Ignore JSON parse errors
+                }
+              }
+            }
+          }
+
+          while (isProcessingBuffer) {
+            await new Promise((resolve) => setTimeout(resolve, typingSpeed));
+          }
+
+          isTyping = false;
+          removeTypingIndicator();
+          stopResponseButton.style.display = "none";
+          regenerateResponseButton.style.display = "inline-block";
+
+          messageDiv.remove();
+          addFormattedMessageToUI("ai", accumulatedText);
+          return accumulatedText;
+        } catch (error) {
+          isTyping = false;
+          removeTypingIndicator();
+          console.error(`${config.name} API Error:`, error);
+          throw error;
+        }
+      }
+
+      function addMessageToUIWithTypingEffect(sender, content) {
+        removeTypingIndicator();
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+        const messageContent = document.createElement("div");
+        messageContent.className = "message-content";
+
+        if (sender === "user") {
+          messageContent.textContent = content;
+          messageDiv.appendChild(messageContent);
+          messagesContainer.appendChild(messageDiv);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          return;
+        }
+
+        messageDiv.appendChild(messageContent);
+        messagesContainer.appendChild(messageDiv);
+
+        const processedContent = processMarkdownContent(content);
+
+        if (sender === "ai") {
+          stopGeneration = false;
+          stopResponseButton.style.display = "inline-block";
+        }
+
+        startTypingEffect(messageContent, processedContent, 0);
+      }
+
+      function addMessageToUI(sender, content) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+        const messageContent = document.createElement("div");
+        messageContent.className = "message-content";
+        messageContent.textContent = content;
+        messageDiv.appendChild(messageContent);
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function addFormattedMessageToUI(sender, content) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+        const messageContent = document.createElement("div");
+        messageContent.className = "message-content";
+        const processedContent = processMarkdownContent(content);
+
+        processedContent.forEach((segment) => {
+          if (segment.type === "code") {
+            const preElement = document.createElement("pre");
+            const codeElement = document.createElement("code");
+            if (segment.language) {
+              codeElement.className = `language-${segment.language}`;
+            }
+            codeElement.classList.add("hljs");
+            const copyButtonContainer = document.createElement("div");
+            copyButtonContainer.className = "code-copy-container";
+            const copyButton = document.createElement("button");
+            copyButton.className = "code-copy-button";
+            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+            copyButton.title = "Copy code";
+            copyButton.addEventListener("click", () => {
+              navigator.clipboard.writeText(segment.content).then(() => {
+                copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                copyButton.classList.add("copied");
+                setTimeout(() => {
+                  copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                  copyButton.classList.remove("copied");
+                }, 2000);
+              });
+            });
+            copyButtonContainer.appendChild(copyButton);
+            preElement.appendChild(copyButtonContainer);
+            codeElement.textContent = segment.content;
+            preElement.appendChild(codeElement);
+            hljs.highlightElement(codeElement);
+          } else {
+            const textDiv = document.createElement("div");
+            textDiv.innerHTML = marked.parse(segment.content);
+            while (textDiv.firstChild) {
+              messageContent.appendChild(textDiv.firstChild);
+            }
+          }
+        });
+
+        messageDiv.appendChild(messageContent);
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function processMarkdownContent(content) {
+        const segments = [];
+        let currentPos = 0;
+        const codeBlockRegex = /\`\`\`([\w]*)\n([\s\S]*?)\n\`\`\`/g;
+
+        let match;
+        while ((match = codeBlockRegex.exec(content)) !== null) {
+          if (match.index > currentPos) {
+            segments.push({
+              type: "text",
+              content: content.substring(currentPos, match.index)
+            });
+          }
+          segments.push({
+            type: "code",
+            language: match[1] || "plaintext",
+            content: match[2]
+          });
+          currentPos = match.index + match[0].length;
+        }
+
+        if (currentPos < content.length) {
+          segments.push({
+            type: "text",
+            content: content.substring(currentPos)
+          });
+        }
+        return segments;
+      }
+
+      function startTypingEffect(messageContent, segments, segmentIndex) {
+        if (segmentIndex >= segments.length) {
+          isTyping = false;
+          stopResponseButton.style.display = "none";
+          return;
+        }
+
+        const segment = segments[segmentIndex];
+
+        if (segment.type === "code") {
+          const preElement = document.createElement("pre");
+          const codeElement = document.createElement("code");
+          if (segment.language) {
+            codeElement.className = `language-${segment.language}`;
+          }
+          codeElement.classList.add("hljs");
+
+          const copyButtonContainer = document.createElement("div");
+          copyButtonContainer.className = "code-copy-container";
+          const copyButton = document.createElement("button");
+          copyButton.className = "code-copy-button";
+          copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+          copyButton.title = "Copy code";
+
+          copyButton.addEventListener("click", () => {
+            navigator.clipboard.writeText(segment.content).then(() => {
+              copyButton.innerHTML = '<i class="fas fa-check"></i>';
+              copyButton.classList.add("copied");
+              setTimeout(() => {
+                copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                copyButton.classList.remove("copied");
+              }, 2000);
+            });
+          });
+
+          copyButtonContainer.appendChild(copyButton);
+          preElement.appendChild(copyButtonContainer);
+          preElement.appendChild(codeElement);
+          messageContent.appendChild(preElement);
+
+          typeCodeContent(codeElement, segment.content, 0, () => {
+            hljs.highlightElement(codeElement);
+            startTypingEffect(messageContent, segments, segmentIndex + 1);
+          });
+        } else {
+          const textDiv = document.createElement("div");
+          messageContent.appendChild(textDiv);
+          typeTextContent(textDiv, segment.content, 0, () => {
+            startTypingEffect(messageContent, segments, segmentIndex + 1);
+          });
+        }
+      }
+
+      function typeCodeContent(element, content, index, callback) {
+        if (stopGeneration) {
+          callback();
+          return;
+        }
+        if (index < content.length) {
+          element.textContent += content[index];
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          letterTimeout = setTimeout(() => {
+            typeCodeContent(element, content, index + 1, callback);
+          }, typingSpeed);
+        } else {
+          callback();
+        }
+      }
+
+      function typeTextContent(element, content, index, callback) {
+        if (stopGeneration) {
+          callback();
+          return;
+        }
+        if (index < content.length) {
+          let currentText = content.substring(0, index + 1);
+          element.innerHTML = marked.parse(currentText);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          letterTimeout = setTimeout(() => {
+            typeTextContent(element, content, index + 1, callback);
+          }, typingSpeed);
+        } else {
+          callback();
+        }
+      }
+
+      function showTypingIndicator() {
+        const typingDiv = document.createElement("div");
+        typingDiv.className = "typing-indicator";
+        typingDiv.id = "typing-indicator";
+        for (let i = 0; i < 3; i++) {
+          const dot = document.createElement("div");
+          dot.className = "typing-dot";
+          typingDiv.appendChild(dot);
+        }
+        messagesContainer.appendChild(typingDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function removeTypingIndicator() {
+        const typingIndicator = document.getElementById("typing-indicator");
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+
+      function toggleTheme() {
+        if (currentTheme === "light") {
+          document.body.classList.add("dark-mode");
+          currentTheme = "dark";
+          toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+          document.body.classList.remove("dark-mode");
+          currentTheme = "light";
+          toggleThemeButton.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+        localStorage.setItem("theme", currentTheme);
+      }
+
+      function regenerateLastResponse() {
+        if (messages.length > 0 && messages[messages.length - 1].role === "assistant") {
+          messages.pop();
+          const messageElements = document.querySelectorAll(".message.ai");
+          if (messageElements.length > 0) {
+            messageElements[messageElements.length - 1].remove();
+          }
+          showTypingIndicator();
+          getAIResponse().then((response) => {
+            messages.push({ role: "assistant", content: response });
+          }).catch((error) => {
+            removeTypingIndicator();
+            addMessageToUIWithTypingEffect("ai", `Sorry, I encountered an error: ${error.message}`);
+          });
+        }
+      }
+
+      function autoResizeTextarea() {
+        userInput.style.height = "auto";
+        userInput.style.height = userInput.scrollHeight + "px";
+      }
+    });
   </script>
 </body>
 </html>
