@@ -28,10 +28,13 @@ export default async function handler(req, res) {
     // Configure API based on selected model
     switch (model) {
       case "deepseek-r1":
+        if (!process.env.API1_ENDPOINT || !process.env.API1_KEY || !process.env.API1_MODEL) {
+          return res.status(500).json({ error: "DeepSeek R1 not configured. Missing API1 environment variables." })
+        }
         apiConfig = {
           endpoint: process.env.API1_ENDPOINT,
           key: process.env.API1_KEY,
-          model: "deepseek-reasoner", // or deepseek-chat
+          model: process.env.API1_MODEL,
           headers: {
             Authorization: `Bearer ${process.env.API1_KEY}`,
             "Content-Type": "application/json",
@@ -40,10 +43,13 @@ export default async function handler(req, res) {
         break
 
       case "llama-3":
+        if (!process.env.API3_ENDPOINT || !process.env.API3_KEY || !process.env.API3_MODEL) {
+          return res.status(500).json({ error: "Llama 3 not configured. Missing API3 environment variables." })
+        }
         apiConfig = {
           endpoint: process.env.API3_ENDPOINT,
           key: process.env.API3_KEY,
-          model: "llama-3.1-70b-versatile", // Groq model name
+          model: process.env.API3_MODEL,
           headers: {
             Authorization: `Bearer ${process.env.API3_KEY}`,
             "Content-Type": "application/json",
@@ -52,10 +58,13 @@ export default async function handler(req, res) {
         break
 
       case "gpt-3.5":
+        if (!process.env.API5_ENDPOINT || !process.env.API5_KEY || !process.env.API5_MODEL) {
+          return res.status(500).json({ error: "GPT-3.5 not configured. Missing API5 environment variables." })
+        }
         apiConfig = {
           endpoint: process.env.API5_ENDPOINT,
           key: process.env.API5_KEY,
-          model: "gpt-3.5-turbo",
+          model: process.env.API5_MODEL,
           headers: {
             Authorization: `Bearer ${process.env.API5_KEY}`,
             "Content-Type": "application/json",
@@ -64,14 +73,10 @@ export default async function handler(req, res) {
         break
 
       default:
-        return res.status(400).json({ error: "Invalid model selected" })
+        return res.status(400).json({ error: `Invalid model selected: ${model}` })
     }
 
-    if (!apiConfig.endpoint || !apiConfig.key) {
-      return res.status(500).json({
-        error: `Model ${model} is not configured. Please check environment variables.`,
-      })
-    }
+    console.log(`Using model: ${apiConfig.model} at ${apiConfig.endpoint}`)
 
     // Prepare conversation history
     const conversationMessages = [
@@ -93,10 +98,14 @@ export default async function handler(req, res) {
       messages: conversationMessages,
       max_tokens: 2000,
       temperature: 0.7,
-      stream: false, // Disable streaming for simplicity
+      stream: false,
     }
 
-    console.log("Making API request to:", apiConfig.endpoint)
+    console.log("Making API request with payload:", {
+      endpoint: apiConfig.endpoint,
+      model: apiConfig.model,
+      messageCount: conversationMessages.length,
+    })
 
     // Make request to AI API
     const response = await fetch(apiConfig.endpoint, {
@@ -107,9 +116,15 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error("API Error:", response.status, errorText)
+      console.error("API Error:", {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText,
+        model: apiConfig.model,
+        endpoint: apiConfig.endpoint,
+      })
 
-      let errorMessage = `API request failed: ${response.status}`
+      let errorMessage = `API request failed: ${response.status} ${response.statusText}`
       try {
         const errorData = JSON.parse(errorText)
         errorMessage = errorData.error?.message || errorData.message || errorMessage
@@ -121,7 +136,7 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json()
-    console.log("API response received successfully")
+    console.log("API response received successfully for model:", apiConfig.model)
 
     // Extract response text
     let responseText
@@ -142,7 +157,8 @@ export default async function handler(req, res) {
     res.status(200).json({
       success: true,
       response: responseText,
-      model: model,
+      model: apiConfig.model,
+      provider: model,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
