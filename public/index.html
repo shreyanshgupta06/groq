@@ -142,6 +142,15 @@
             background: #404040;
         }
 
+        .stop-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .stop-btn:hover {
+            background: #b91c1c;
+        }
+
         .user-avatar {
             width: 32px;
             height: 32px;
@@ -452,73 +461,183 @@
         @media (max-width: 768px) {
             .app {
                 flex-direction: column;
+                height: 100vh;
             }
             
             .sidebar {
                 width: 100%;
-                height: auto;
+                height: 60px;
                 border-right: none;
                 border-bottom: 1px solid #2f2f2f;
-                padding: 8px;
+                padding: 8px 16px;
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .sidebar-header {
+                padding: 0;
+                margin: 0;
             }
             
             .sidebar-menu {
                 flex-direction: row;
                 overflow-x: auto;
                 gap: 8px;
+                margin-left: auto;
             }
             
             .menu-item {
                 white-space: nowrap;
                 min-width: auto;
+                padding: 8px 12px;
+                font-size: 12px;
             }
             
             .main {
-                height: calc(100vh - 80px);
+                height: calc(100vh - 60px);
             }
             
             .main-header {
                 padding: 8px 16px;
+                min-height: 48px;
+            }
+            
+            .header-title {
+                font-size: 16px;
             }
             
             .chat-container {
-                padding: 16px;
+                padding: 12px;
+                height: calc(100vh - 60px - 48px - 120px);
+                overflow-y: auto;
             }
             
             .welcome-title {
                 font-size: 24px;
+                margin-bottom: 12px;
+            }
+            
+            .welcome-subtitle {
+                font-size: 14px;
+                margin-bottom: 24px;
             }
             
             .suggestions {
                 grid-template-columns: 1fr;
                 gap: 8px;
+                max-width: 100%;
+            }
+            
+            .suggestion {
+                padding: 12px;
             }
             
             .message-content {
                 max-width: 90%;
+                padding: 12px 16px;
+                font-size: 14px;
             }
             
             .input-section {
-                padding: 0 16px 16px;
+                padding: 12px 16px;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #212121;
+                border-top: 1px solid #2f2f2f;
+            }
+            
+            .input-container {
+                padding: 8px 12px;
+            }
+            
+            .message-input {
+                font-size: 14px;
+            }
+            
+            .disclaimer {
+                font-size: 10px;
+                margin-top: 8px;
             }
         }
 
         @media (max-width: 480px) {
             .sidebar {
-                display: none;
+                height: 50px;
+                padding: 4px 12px;
+            }
+            
+            .logo {
+                font-size: 14px;
+            }
+            
+            .logo-icon {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
             }
             
             .main {
-                height: 100vh;
+                height: calc(100vh - 50px);
+            }
+            
+            .main-header {
+                padding: 6px 12px;
+                min-height: 40px;
+            }
+            
+            .header-title {
+                font-size: 14px;
+            }
+            
+            .icon-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .chat-container {
+                padding: 8px;
+                height: calc(100vh - 50px - 40px - 100px);
             }
             
             .welcome-title {
                 font-size: 20px;
             }
             
+            .welcome-subtitle {
+                font-size: 13px;
+            }
+            
             .message-content {
                 max-width: 95%;
-                padding: 12px 16px;
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            
+            .input-section {
+                padding: 8px 12px;
+            }
+            
+            .input-container {
+                padding: 6px 10px;
+            }
+            
+            .send-button {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .send-icon {
+                width: 14px;
+                height: 14px;
             }
         }
     </style>
@@ -534,10 +653,6 @@
             </div>
             
             <div class="sidebar-menu">
-                <div class="menu-item active" id="newChatBtn">
-                    <span class="menu-icon">✏️</span>
-                    New chat
-                </div>
                 <div class="menu-item">
                     <span class="menu-icon">🔍</span>
                     Search
@@ -554,6 +669,9 @@
                 <div class="header-title">Shreyansh Cloud</div>
                 
                 <div class="header-actions">
+                    <button class="icon-btn stop-btn" id="stopButton" style="display: none;" title="Stop generating">
+                        ⏹
+                    </button>
                     <button class="icon-btn" id="themeToggle" title="Toggle theme">
                         🌙
                     </button>
@@ -568,19 +686,19 @@
                     
                     <div class="suggestions">
                         <div class="suggestion" data-prompt="Explain quantum computing in simple terms">
-                            <div class="suggestion-title">🔬 Science</div>
+                            <div class="suggestion-title">Science</div>
                             <div class="suggestion-desc">Explain quantum computing</div>
                         </div>
                         <div class="suggestion" data-prompt="Write a creative story about space exploration">
-                            <div class="suggestion-title">✍️ Creative</div>
+                            <div class="suggestion-title">Creative</div>
                             <div class="suggestion-desc">Write a space story</div>
                         </div>
                         <div class="suggestion" data-prompt="Help me learn JavaScript fundamentals">
-                            <div class="suggestion-title">💻 Programming</div>
+                            <div class="suggestion-title">Programming</div>
                             <div class="suggestion-desc">Learn JavaScript</div>
                         </div>
                         <div class="suggestion" data-prompt="Give me tips for productivity and time management">
-                            <div class="suggestion-title">📈 Productivity</div>
+                            <div class="suggestion-title">Productivity</div>
                             <div class="suggestion-desc">Productivity tips</div>
                         </div>
                     </div>
@@ -619,7 +737,8 @@
             constructor() {
                 this.messages = [];
                 this.isLoading = false;
-                this.isDark = true; // Default to dark theme
+                this.isDark = true;
+                this.abortController = null;
                 
                 this.initializeElements();
                 this.setupEventListeners();
@@ -632,12 +751,13 @@
                 this.chatMessages = document.getElementById('chatMessages');
                 this.messageInput = document.getElementById('messageInput');
                 this.sendButton = document.getElementById('sendButton');
-                this.newChatBtn = document.getElementById('newChatBtn');
+                this.stopButton = document.getElementById('stopButton');
                 this.themeToggle = document.getElementById('themeToggle');
             }
             
             setupEventListeners() {
                 this.sendButton.addEventListener('click', () => this.sendMessage());
+                this.stopButton.addEventListener('click', () => this.stopGeneration());
                 this.messageInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -649,7 +769,6 @@
                     this.updateSendButton();
                 });
                 
-                this.newChatBtn.addEventListener('click', () => this.newChat());
                 this.themeToggle.addEventListener('click', () => this.toggleTheme());
                 
                 // Suggestion clicks
@@ -676,9 +795,14 @@
                 this.autoResize();
                 this.updateSendButton();
                 
-                // Show typing indicator
+                // Show typing indicator and stop button
                 this.showTypingIndicator();
                 this.isLoading = true;
+                this.stopButton.style.display = 'flex';
+                this.sendButton.style.display = 'none';
+                
+                // Create abort controller for this request
+                this.abortController = new AbortController();
                 
                 try {
                     const response = await fetch('/api/chat', {
@@ -689,7 +813,8 @@
                         body: JSON.stringify({
                             message: message,
                             messages: this.messages
-                        })
+                        }),
+                        signal: this.abortController.signal
                     });
                     
                     if (!response.ok) {
@@ -707,11 +832,25 @@
                     this.addMessage('assistant', data.response);
                     
                 } catch (error) {
-                    console.error('Error sending message:', error);
-                    this.hideTypingIndicator();
-                    this.showError(`Failed to get response: ${error.message}`);
+                    if (error.name === 'AbortError') {
+                        this.hideTypingIndicator();
+                        this.addMessage('assistant', 'Response generation was stopped.');
+                    } else {
+                        console.error('Error sending message:', error);
+                        this.hideTypingIndicator();
+                        this.showError(`Failed to get response: ${error.message}`);
+                    }
                 } finally {
                     this.isLoading = false;
+                    this.stopButton.style.display = 'none';
+                    this.sendButton.style.display = 'flex';
+                    this.abortController = null;
+                }
+            }
+            
+            stopGeneration() {
+                if (this.abortController) {
+                    this.abortController.abort();
                 }
             }
             
@@ -803,13 +942,6 @@
             autoResize() {
                 this.messageInput.style.height = 'auto';
                 this.messageInput.style.height = Math.min(this.messageInput.scrollHeight, 120) + 'px';
-            }
-            
-            newChat() {
-                this.messages = [];
-                this.chatMessages.innerHTML = '';
-                this.chatMessages.style.display = 'none';
-                this.welcomeSection.style.display = 'flex';
             }
             
             toggleTheme() {
