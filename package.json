@@ -1,0 +1,24 @@
+{
+  "name": "secure-shreyansh-cloud",
+  "version": "1.0.0",
+  "description": "Secure Shreyansh Cloud chat proxy server with dotenv support",
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "keywords": [
+    "express",
+    "chat",
+    "proxy",
+    "dotenv"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+
