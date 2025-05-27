@@ -1,187 +1,156 @@
 export default async function handler(req, res) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+  if (req.method === "OPTIONS") {
+    res.status(200).end()
+    return
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Method not allowed" })
+    return
   }
 
   try {
-    const { messages, model: modelId } = req.body;
-    
-    if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Messages array is required' });
+    const { message, model, messages = [] } = req.body
+
+    if (!message || !model) {
+      return res.status(400).json({ error: "Message and model are required" })
     }
 
-    // API Configuration
-    const API_CONFIGS = {
-      api1: {
-        name: 'Llama 3',
-        endpoint: process.env.API1_ENDPOINT,
-        apiKey: process.env.API1_KEY,
-        model: process.env.API1_MODEL || 'llama3-70b-8192'
-      },
-      api3: {
-        name: 'GPT 3.5 Turbo',
-        endpoint: process.env.API3_ENDPOINT,
-        apiKey: process.env.API3_KEY,
-        model: process.env.API3_MODEL || 'gpt-3.5-turbo'
-      },
-      api5: {
-        name: 'Deepseek R1',
-        endpoint: process.env.API5_ENDPOINT,
-        apiKey: process.env.API5_KEY,
-        model: process.env.API5_MODEL || 'deepseek-r1'
-      }
-    };
-    
-    const config = API_CONFIGS[modelId];
-    if (!config || !config.endpoint || !config.apiKey) {
-      return res.status(400).json({ error: 'Invalid or unconfigured model' });
-    }
-    
-    console.log(`Making request to ${config.name} (${modelId})`);
-    
-    // Set up headers based on API type
-    const headers = {
-      'Content-Type': 'application/json'
-    };
-    
-    let requestBody;
-    let url = config.endpoint;
-    
-    // Configure request based on API provider
-    if (modelId === 'api2') { // Claude
-      headers['x-api-key'] = config.apiKey;
-      headers['anthropic-version'] = '2023-06-01';
-      requestBody = {
-        model: config.model,
-        max_tokens: 2048,
-        messages: messages.map(msg => ({
-          role: msg.role === 'assistant' ? 'assistant' : 'user',
-          content: msg.content
-        })),
-        stream: true
-      };
-    } else if (modelId === 'api4') { // Gemini
-      url += `?key=${config.apiKey}`;
-      requestBody = {
-        contents: messages.filter(msg => msg.role === 'user').map(msg => ({
-          parts: [{ text: msg.content }]
-        })),
-        generationConfig: {
-          maxOutputTokens: 2048,
-          temperature: 0.7
+    console.log("Chat request:", { model, messageLength: message.length })
+
+    let apiConfig
+
+    // Configure API based on selected model
+    switch (model) {
+      case "deepseek-r1":
+        apiConfig = {
+          endpoint: process.env.API1_ENDPOINT,
+          key: process.env.API1_KEY,
+          model: "deepseek-reasoner", // or deepseek-chat
+          headers: {
+            Authorization: `Bearer ${process.env.API1_KEY}`,
+            "Content-Type": "application/json",
+          },
         }
-      };
-    } else {
-      // Standard OpenAI-compatible format (api1, api3, api5)
-      headers['Authorization'] = `Bearer ${config.apiKey}`;
-      requestBody = {
-        model: config.model,
-        messages: messages,
-        stream: true,
-        max_tokens: 2048,
-        temperature: 0.7
-      };
+        break
+
+      case "llama-3":
+        apiConfig = {
+          endpoint: process.env.API3_ENDPOINT,
+          key: process.env.API3_KEY,
+          model: "llama-3.1-70b-versatile", // Groq model name
+          headers: {
+            Authorization: `Bearer ${process.env.API3_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+        break
+
+      case "gpt-3.5":
+        apiConfig = {
+          endpoint: process.env.API5_ENDPOINT,
+          key: process.env.API5_KEY,
+          model: "gpt-3.5-turbo",
+          headers: {
+            Authorization: `Bearer ${process.env.API5_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+        break
+
+      default:
+        return res.status(400).json({ error: "Invalid model selected" })
     }
-    
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(requestBody)
-    });
-    
+
+    if (!apiConfig.endpoint || !apiConfig.key) {
+      return res.status(500).json({
+        error: `Model ${model} is not configured. Please check environment variables.`,
+      })
+    }
+
+    // Prepare conversation history
+    const conversationMessages = [
+      {
+        role: "system",
+        content:
+          "You are Shreyansh Cloud AI, a helpful and intelligent assistant. Provide clear, accurate, and helpful responses. Format your responses nicely with proper structure when needed.",
+      },
+      ...messages.slice(-10), // Keep last 10 messages for context
+      {
+        role: "user",
+        content: message,
+      },
+    ]
+
+    // Prepare request payload
+    const payload = {
+      model: apiConfig.model,
+      messages: conversationMessages,
+      max_tokens: 2000,
+      temperature: 0.7,
+      stream: false, // Disable streaming for simplicity
+    }
+
+    console.log("Making API request to:", apiConfig.endpoint)
+
+    // Make request to AI API
+    const response = await fetch(apiConfig.endpoint, {
+      method: "POST",
+      headers: apiConfig.headers,
+      body: JSON.stringify(payload),
+    })
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`API Error (${response.status}):`, errorText);
-      return res.status(response.status).json({ 
-        error: `API request failed: ${response.statusText}` 
-      });
-    }
-    
-    // Set up streaming response
-    res.writeHead(200, {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive'
-    });
-    
-    // Handle non-streaming APIs (like Gemini)
-    if (modelId === 'api4') {
-      const data = await response.json();
-      if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-        const text = data.candidates[0].content.parts[0].text;
-        res.write(`data: ${JSON.stringify({ content: text })}\n\n`);
+      const errorText = await response.text()
+      console.error("API Error:", response.status, errorText)
+
+      let errorMessage = `API request failed: ${response.status}`
+      try {
+        const errorData = JSON.parse(errorText)
+        errorMessage = errorData.error?.message || errorData.message || errorMessage
+      } catch (e) {
+        // Use default error message
       }
-      res.write('data: [DONE]\n\n');
-      res.end();
-      return;
+
+      throw new Error(errorMessage)
     }
-    
-    // Handle streaming APIs
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
-        
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6).trim();
-            if (data === '[DONE]') {
-              res.write('data: [DONE]\n\n');
-              res.end();
-              return;
-            }
-            
-            try {
-              const parsed = JSON.parse(data);
-              let content = '';
-              
-              // Parse based on API type
-              if (modelId === 'api2') { // Claude
-                if (parsed.type === 'content_block_delta' && parsed.delta && parsed.delta.text) {
-                  content = parsed.delta.text;
-                }
-              } else {
-                // Standard OpenAI format
-                if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
-                  content = parsed.choices[0].delta.content;
-                }
-              }
-              
-              if (content) {
-                res.write(`data: ${JSON.stringify({ content })}\n\n`);
-              }
-            } catch (e) {
-              // Ignore JSON parse errors
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Streaming error:', error);
-      res.write(`data: ${JSON.stringify({ content: 'Sorry, an error occurred while streaming the response.' })}\n\n`);
+
+    const data = await response.json()
+    console.log("API response received successfully")
+
+    // Extract response text
+    let responseText
+    if (data.choices && data.choices[0] && data.choices[0].message) {
+      responseText = data.choices[0].message.content
+    } else if (data.message && data.message.content) {
+      responseText = data.message.content
+    } else if (data.response) {
+      responseText = data.response
+    } else {
+      console.error("Unexpected API response format:", data)
+      throw new Error("Unexpected response format from AI API")
     }
-    
-    res.write('data: [DONE]\n\n');
-    res.end();
-    
+
+    // Clean up response
+    responseText = responseText.trim()
+
+    res.status(200).json({
+      success: true,
+      response: responseText,
+      model: model,
+      timestamp: new Date().toISOString(),
+    })
   } catch (error) {
-    console.error('Chat API Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Chat API error:", error)
+    res.status(500).json({
+      success: false,
+      error: error.message || "Internal server error",
+      timestamp: new Date().toISOString(),
+    })
   }
 }
