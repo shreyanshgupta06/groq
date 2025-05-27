@@ -15,68 +15,24 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, model, messages = [] } = req.body
+    const { message, messages = [] } = req.body
 
-    if (!message || !model) {
-      return res.status(400).json({ error: "Message and model are required" })
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" })
     }
 
-    console.log("Chat request:", { model, messageLength: message.length })
+    console.log("Chat request:", { messageLength: message.length, historyLength: messages.length })
 
-    let apiConfig
+    // Use environment variables for API configuration
+    const API_KEY = process.env.GROQ_API_KEY
+    const API_URL = process.env.GROQ_API_URL || "https://api.groq.com/openai/v1/chat/completions"
+    const MODEL = process.env.GROQ_MODEL || "llama-3.1-70b-versatile"
 
-    // Configure API based on selected model
-    switch (model) {
-      case "deepseek-r1":
-        if (!process.env.API1_ENDPOINT || !process.env.API1_KEY || !process.env.API1_MODEL) {
-          return res.status(500).json({ error: "DeepSeek R1 not configured. Missing API1 environment variables." })
-        }
-        apiConfig = {
-          endpoint: process.env.API1_ENDPOINT,
-          key: process.env.API1_KEY,
-          model: process.env.API1_MODEL,
-          headers: {
-            Authorization: `Bearer ${process.env.API1_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-        break
-
-      case "llama-3":
-        if (!process.env.API3_ENDPOINT || !process.env.API3_KEY || !process.env.API3_MODEL) {
-          return res.status(500).json({ error: "Llama 3 not configured. Missing API3 environment variables." })
-        }
-        apiConfig = {
-          endpoint: process.env.API3_ENDPOINT,
-          key: process.env.API3_KEY,
-          model: process.env.API3_MODEL,
-          headers: {
-            Authorization: `Bearer ${process.env.API3_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-        break
-
-      case "gpt-3.5":
-        if (!process.env.API5_ENDPOINT || !process.env.API5_KEY || !process.env.API5_MODEL) {
-          return res.status(500).json({ error: "GPT-3.5 not configured. Missing API5 environment variables." })
-        }
-        apiConfig = {
-          endpoint: process.env.API5_ENDPOINT,
-          key: process.env.API5_KEY,
-          model: process.env.API5_MODEL,
-          headers: {
-            Authorization: `Bearer ${process.env.API5_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-        break
-
-      default:
-        return res.status(400).json({ error: `Invalid model selected: ${model}` })
+    if (!API_KEY) {
+      return res.status(500).json({
+        error: "API configuration missing. Please check environment variables.",
+      })
     }
-
-    console.log(`Using model: ${apiConfig.model} at ${apiConfig.endpoint}`)
 
     // Prepare conversation history
     const conversationMessages = [
@@ -92,39 +48,29 @@ export default async function handler(req, res) {
       },
     ]
 
-    // Prepare request payload
-    const payload = {
-      model: apiConfig.model,
-      messages: conversationMessages,
-      max_tokens: 2000,
-      temperature: 0.7,
-      stream: false,
-    }
+    console.log("Making API request to Groq...")
 
-    console.log("Making API request with payload:", {
-      endpoint: apiConfig.endpoint,
-      model: apiConfig.model,
-      messageCount: conversationMessages.length,
-    })
-
-    // Make request to AI API
-    const response = await fetch(apiConfig.endpoint, {
+    // Make request to Groq API
+    const response = await fetch(API_URL, {
       method: "POST",
-      headers: apiConfig.headers,
-      body: JSON.stringify(payload),
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: conversationMessages,
+        max_tokens: 2000,
+        temperature: 0.7,
+        stream: false,
+      }),
     })
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error("API Error:", {
-        status: response.status,
-        statusText: response.statusText,
-        body: errorText,
-        model: apiConfig.model,
-        endpoint: apiConfig.endpoint,
-      })
+      console.error("Groq API Error:", response.status, errorText)
 
-      let errorMessage = `API request failed: ${response.status} ${response.statusText}`
+      let errorMessage = `API request failed: ${response.status}`
       try {
         const errorData = JSON.parse(errorText)
         errorMessage = errorData.error?.message || errorData.message || errorMessage
@@ -136,16 +82,12 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json()
-    console.log("API response received successfully for model:", apiConfig.model)
+    console.log("API response received successfully")
 
     // Extract response text
     let responseText
     if (data.choices && data.choices[0] && data.choices[0].message) {
       responseText = data.choices[0].message.content
-    } else if (data.message && data.message.content) {
-      responseText = data.message.content
-    } else if (data.response) {
-      responseText = data.response
     } else {
       console.error("Unexpected API response format:", data)
       throw new Error("Unexpected response format from AI API")
@@ -157,8 +99,6 @@ export default async function handler(req, res) {
     res.status(200).json({
       success: true,
       response: responseText,
-      model: apiConfig.model,
-      provider: model,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
