@@ -3,43 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shreyansh Cloud - AI Chat</title>
+    <title>Shreyansh Cloud</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --success: #10b981;
-            --error: #ef4444;
-            --warning: #f59e0b;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-tertiary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --radius: 0.75rem;
-            --radius-sm: 0.5rem;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            --border: #334155;
-            --border-light: #475569;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -48,238 +16,184 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow: hidden;
+            background: #212121;
+            color: #ffffff;
             height: 100vh;
+            overflow: hidden;
         }
 
         .app {
             display: flex;
             height: 100vh;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--bg-primary);
-            box-shadow: var(--shadow-lg);
         }
 
         .sidebar {
-            width: 300px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
+            width: 260px;
+            background: #171717;
+            border-right: 1px solid #2f2f2f;
             display: flex;
             flex-direction: column;
-            padding: 1.5rem;
+            padding: 12px;
+        }
+
+        .sidebar-header {
+            padding: 8px 12px;
+            margin-bottom: 8px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--primary);
+            gap: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffffff;
         }
 
         .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: var(--radius-sm);
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #10a37f, #1a7f64);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-size: 12px;
             font-weight: bold;
         }
 
-        .model-selector {
-            margin-bottom: 1.5rem;
-        }
-
-        .model-label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .model-select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .model-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
-        }
-
-        .model-info {
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-sm);
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .model-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .model-provider {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .model-details {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            background: var(--bg-primary);
-            padding: 0.5rem;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-        }
-
-        .stats {
+        .sidebar-menu {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 2px;
         }
 
-        .stat-item {
+        .menu-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.875rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-        }
-
-        .stat-value {
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: auto;
-        }
-
-        .btn {
-            padding: 0.75rem 1rem;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            font-weight: 500;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            color: #ececec;
+            text-decoration: none;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            transition: background-color 0.2s;
         }
 
-        .btn-primary {
-            background: var(--primary);
-            color: white;
+        .menu-item:hover {
+            background: #2f2f2f;
         }
 
-        .btn-primary:hover {
-            background: var(--primary-dark);
+        .menu-item.active {
+            background: #2f2f2f;
         }
 
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-primary);
+        .menu-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
         }
 
         .main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            background: #212121;
         }
 
-        .header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border);
+        .main-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 12px 24px;
+            border-bottom: 1px solid #2f2f2f;
         }
 
-        .header-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--text-primary);
+        .model-selector {
+            position: relative;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
+        .model-dropdown {
+            background: #2f2f2f;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 8px 32px 8px 12px;
+            font-size: 14px;
             cursor: pointer;
+            min-width: 160px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 8px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+        }
+
+        .model-dropdown:focus {
+            outline: none;
+            border-color: #10a37f;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #10a37f;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .chat-container {
             flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .welcome-section {
+            max-width: 768px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 48px;
+        }
+
+        .chat-messages {
+            width: 100%;
+            max-width: 768px;
+            margin-bottom: 24px;
         }
 
         .message {
-            display: flex;
-            gap: 1rem;
-            max-width: 80%;
-            animation: slideIn 0.3s ease-out;
+            margin-bottom: 24px;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        @keyframes slideIn {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -288,92 +202,167 @@
         }
 
         .message.user {
-            align-self: flex-end;
-            flex-direction: row-reverse;
+            display: flex;
+            justify-content: flex-end;
         }
 
         .message.assistant {
-            align-self: flex-start;
+            display: flex;
+            justify-content: flex-start;
         }
 
-        .message-avatar {
-            width: 40px;
-            height: 40px;
+        .message-content {
+            max-width: 80%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: #10a37f;
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: #2f2f2f;
+            color: #ececec;
+        }
+
+        .input-section {
+            width: 100%;
+            max-width: 768px;
+            position: relative;
+        }
+
+        .input-container {
+            background: #2f2f2f;
+            border: 1px solid #404040;
+            border-radius: 24px;
+            display: flex;
+            align-items: flex-end;
+            padding: 12px;
+            gap: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .input-container:focus-within {
+            border-color: #10a37f;
+        }
+
+        .model-selector-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #404040;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .model-selector-input:hover {
+            background: #4a4a4a;
+        }
+
+        .model-icon {
+            width: 16px;
+            height: 16px;
+            background: #10a37f;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            flex-shrink: 0;
-        }
-
-        .message.user .message-avatar {
-            background: var(--primary);
             color: white;
+            font-size: 10px;
+            font-weight: bold;
         }
 
-        .message.assistant .message-avatar {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
+        .model-name {
+            font-size: 13px;
+            color: #ececec;
+            font-weight: 500;
         }
 
-        .message-content {
-            background: var(--bg-secondary);
-            padding: 1rem 1.25rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            position: relative;
+        .dropdown-arrow {
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
         }
 
-        .message.user .message-content {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+        .message-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+            min-height: 24px;
+            max-height: 120px;
+            padding: 0;
+            font-family: inherit;
         }
 
-        .message-content pre {
-            background: var(--bg-tertiary);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            overflow-x: auto;
-            margin: 0.5rem 0;
-            border: 1px solid var(--border);
+        .message-input::placeholder {
+            color: #8e8ea0;
         }
 
-        .message-content code {
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.875rem;
+        .send-button {
+            width: 32px;
+            height: 32px;
+            background: #ffffff;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.4;
         }
 
-        .message-content p {
-            margin-bottom: 0.75rem;
+        .send-button:hover {
+            opacity: 1;
         }
 
-        .message-content p:last-child {
-            margin-bottom: 0;
+        .send-button.active {
+            opacity: 1;
+            background: #10a37f;
+        }
+
+        .send-button.active:hover {
+            background: #0d8f6f;
+        }
+
+        .send-icon {
+            width: 16px;
+            height: 16px;
+            color: #000000;
+        }
+
+        .send-button.active .send-icon {
+            color: #ffffff;
         }
 
         .typing-indicator {
             display: flex;
-            gap: 1rem;
-            max-width: 80%;
-            align-self: flex-start;
+            justify-content: flex-start;
+            margin-bottom: 24px;
         }
 
-        .typing-dots {
-            background: var(--bg-secondary);
-            padding: 1rem 1.25rem;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
+        .typing-content {
+            background: #2f2f2f;
+            padding: 16px 20px;
+            border-radius: 18px;
             display: flex;
-            gap: 0.25rem;
+            gap: 4px;
         }
 
         .typing-dot {
             width: 8px;
             height: 8px;
-            background: var(--text-muted);
+            background: #8e8ea0;
             border-radius: 50%;
             animation: typing 1.4s infinite ease-in-out;
         }
@@ -393,293 +382,171 @@
             }
         }
 
-        .input-area {
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--border);
-            background: var(--bg-primary);
+        .model-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #2f2f2f;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            margin-top: 4px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .input-container {
-            display: flex;
-            gap: 0.75rem;
-            align-items: flex-end;
+        .model-dropdown-menu.show {
+            display: block;
         }
 
-        .input-wrapper {
-            flex: 1;
-            position: relative;
-        }
-
-        .message-input {
-            width: 100%;
-            min-height: 50px;
-            max-height: 150px;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            resize: none;
-            transition: all 0.2s;
-        }
-
-        .message-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
-        }
-
-        .message-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .send-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: var(--radius);
-            background: var(--primary);
-            color: white;
+        .model-option {
+            padding: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .model-option:hover {
+            background: #404040;
+        }
+
+        .model-option.selected {
+            background: #404040;
+        }
+
+        .model-option-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
         }
 
-        .send-btn:hover:not(:disabled) {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
+        .model-option-info {
+            flex: 1;
         }
 
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .model-option-name {
+            font-size: 14px;
+            color: #ececec;
+            font-weight: 500;
+        }
+
+        .model-option-provider {
+            font-size: 12px;
+            color: #8e8ea0;
         }
 
         .error-message {
-            background: rgb(254 242 242);
-            border: 1px solid rgb(252 165 165);
-            color: var(--error);
-            padding: 1rem;
-            border-radius: var(--radius);
-            margin: 1rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        [data-theme="dark"] .error-message {
-            background: rgb(127 29 29);
-            border-color: rgb(185 28 28);
-            color: rgb(252 165 165);
-        }
-
-        .welcome-screen {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .welcome-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-subtitle {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .suggestions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .suggestion {
-            padding: 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .suggestion:hover {
-            background: var(--bg-tertiary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .suggestion-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .suggestion-desc {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
+            background: #3f1f1f;
+            border: 1px solid #8b2635;
+            color: #ff6b6b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
-            .app {
-                flex-direction: column;
-            }
-            
             .sidebar {
                 width: 100%;
-                padding: 1rem;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #2f2f2f;
+            }
+            
+            .app {
+                flex-direction: column;
             }
             
             .main {
                 height: calc(100vh - 200px);
             }
-            
-            .suggestions {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-left: 0.5rem;
-        }
-
-        .status-online {
-            background: var(--success);
-        }
-
-        .status-offline {
-            background: var(--error);
-        }
-
-        .status-loading {
-            background: var(--warning);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
     <div class="app">
         <div class="sidebar">
-            <div class="logo">
-                <div class="logo-icon">SC</div>
-                Shreyansh Cloud
-            </div>
-            
-            <div class="model-selector">
-                <div class="model-label">AI Model</div>
-                <select class="model-select" id="modelSelect">
-                    <option value="">Loading models...</option>
-                </select>
-            </div>
-            
-            <div class="model-info" id="modelInfo">
-                <div class="model-name">Select a model</div>
-                <div class="model-provider">Choose from available AI models</div>
-                <div class="model-details">Model details will appear here</div>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-label">Status</span>
-                    <span class="stat-value" id="connectionStatus">
-                        Connecting
-                        <span class="status-indicator status-loading"></span>
-                    </span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Messages</span>
-                    <span class="stat-value" id="messageCount">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Current Model</span>
-                    <span class="stat-value" id="currentModelName">None</span>
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">SC</div>
+                    Shreyansh Cloud
                 </div>
             </div>
             
-            <div class="actions">
-                <button class="btn btn-secondary" id="clearChat">
-                    🗑️ Clear Chat
-                </button>
-                <button class="btn btn-secondary" id="toggleTheme">
-                    🌙 Dark Mode
-                </button>
+            <div class="sidebar-menu">
+                <div class="menu-item active" id="newChatBtn">
+                    <span class="menu-icon">✏️</span>
+                    New chat
+                </div>
+                <div class="menu-item" id="searchBtn">
+                    <span class="menu-icon">🔍</span>
+                    Search chats
+                </div>
+                <div class="menu-item" id="libraryBtn">
+                    <span class="menu-icon">📚</span>
+                    Library
+                </div>
             </div>
         </div>
         
         <div class="main">
-            <div class="header">
-                <div class="header-title">AI Assistant</div>
-                <div class="header-actions">
-                    <button class="icon-btn" id="refreshBtn" title="Refresh Models">
-                        🔄
-                    </button>
-                    <button class="icon-btn" id="settingsBtn" title="Settings">
-                        ⚙️
-                    </button>
+            <div class="main-header">
+                <div class="model-selector">
+                    <select class="model-dropdown" id="headerModelSelect">
+                        <option value="">Loading models...</option>
+                    </select>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-avatar">S</div>
                 </div>
             </div>
             
             <div class="chat-container" id="chatContainer">
-                <div class="welcome-screen" id="welcomeScreen">
-                    <div class="welcome-title">Welcome to Shreyansh Cloud</div>
-                    <div class="welcome-subtitle">Your intelligent AI assistant powered by DeepSeek R1, Llama 3, and GPT-3.5</div>
-                    <div class="suggestions">
-                        <div class="suggestion" data-prompt="Explain quantum computing in simple terms">
-                            <div class="suggestion-title">🔬 Science</div>
-                            <div class="suggestion-desc">Explain quantum computing</div>
-                        </div>
-                        <div class="suggestion" data-prompt="Write a creative story about space exploration">
-                            <div class="suggestion-title">✍️ Creative</div>
-                            <div class="suggestion-desc">Write a space story</div>
-                        </div>
-                        <div class="suggestion" data-prompt="Help me learn JavaScript fundamentals">
-                            <div class="suggestion-title">💻 Programming</div>
-                            <div class="suggestion-desc">Learn JavaScript</div>
-                        </div>
-                        <div class="suggestion" data-prompt="Give me tips for productivity and time management">
-                            <div class="suggestion-title">📈 Productivity</div>
-                            <div class="suggestion-desc">Productivity tips</div>
-                        </div>
-                    </div>
+                <div class="welcome-section" id="welcomeSection">
+                    <h1 class="welcome-title">What can I help with?</h1>
                 </div>
-            </div>
-            
-            <div class="input-area">
-                <div class="input-container">
-                    <div class="input-wrapper">
+                
+                <div class="chat-messages" id="chatMessages" style="display: none;">
+                    <!-- Messages will be added here -->
+                </div>
+                
+                <div class="input-section">
+                    <div class="input-container">
+                        <div class="model-selector-input" id="modelSelectorInput">
+                            <div class="model-icon" id="modelIcon">AI</div>
+                            <span class="model-name" id="modelName">Select Model</span>
+                            <svg class="dropdown-arrow" viewBox="0 0 12 12" fill="currentColor">
+                                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            </svg>
+                            
+                            <div class="model-dropdown-menu" id="modelDropdown">
+                                <!-- Model options will be populated here -->
+                            </div>
+                        </div>
+                        
                         <textarea 
                             class="message-input" 
                             id="messageInput" 
-                            placeholder="Type your message here..."
+                            placeholder="Ask anything"
                             rows="1"
                         ></textarea>
+                        
+                        <button class="send-button" id="sendButton">
+                            <svg class="send-icon" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 12L3 7L4.5 5.5L8 9L11.5 5.5L13 7L8 12Z" transform="rotate(-90 8 8)"/>
+                            </svg>
+                        </button>
                     </div>
-                    <button class="send-btn" id="sendBtn">
-                        ➤
-                    </button>
                 </div>
             </div>
         </div>
@@ -691,58 +558,58 @@
                 this.currentModel = '';
                 this.messages = [];
                 this.isLoading = false;
-                this.messageCount = 0;
                 this.models = [];
                 
                 this.initializeElements();
                 this.setupEventListeners();
                 this.loadModels();
-                this.loadTheme();
             }
             
             initializeElements() {
-                this.modelSelect = document.getElementById('modelSelect');
-                this.modelInfo = document.getElementById('modelInfo');
                 this.chatContainer = document.getElementById('chatContainer');
-                this.welcomeScreen = document.getElementById('welcomeScreen');
+                this.welcomeSection = document.getElementById('welcomeSection');
+                this.chatMessages = document.getElementById('chatMessages');
                 this.messageInput = document.getElementById('messageInput');
-                this.sendBtn = document.getElementById('sendBtn');
-                this.clearChatBtn = document.getElementById('clearChat');
-                this.toggleThemeBtn = document.getElementById('toggleTheme');
-                this.connectionStatus = document.getElementById('connectionStatus');
-                this.messageCountEl = document.getElementById('messageCount');
-                this.currentModelNameEl = document.getElementById('currentModelName');
-                this.refreshBtn = document.getElementById('refreshBtn');
+                this.sendButton = document.getElementById('sendButton');
+                this.modelSelectorInput = document.getElementById('modelSelectorInput');
+                this.modelDropdown = document.getElementById('modelDropdown');
+                this.modelName = document.getElementById('modelName');
+                this.modelIcon = document.getElementById('modelIcon');
+                this.headerModelSelect = document.getElementById('headerModelSelect');
+                this.newChatBtn = document.getElementById('newChatBtn');
             }
             
             setupEventListeners() {
-                this.modelSelect.addEventListener('change', (e) => this.selectModel(e.target.value));
-                this.sendBtn.addEventListener('click', () => this.sendMessage());
+                this.sendButton.addEventListener('click', () => this.sendMessage());
                 this.messageInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         this.sendMessage();
                     }
                 });
-                this.messageInput.addEventListener('input', () => this.autoResize());
-                this.clearChatBtn.addEventListener('click', () => this.clearChat());
-                this.toggleThemeBtn.addEventListener('click', () => this.toggleTheme());
-                this.refreshBtn.addEventListener('click', () => this.loadModels());
+                this.messageInput.addEventListener('input', () => {
+                    this.autoResize();
+                    this.updateSendButton();
+                });
                 
-                // Suggestion clicks
-                document.querySelectorAll('.suggestion').forEach(suggestion => {
-                    suggestion.addEventListener('click', () => {
-                        const prompt = suggestion.dataset.prompt;
-                        this.messageInput.value = prompt;
-                        this.sendMessage();
-                    });
+                this.modelSelectorInput.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleModelDropdown();
+                });
+                
+                this.headerModelSelect.addEventListener('change', (e) => {
+                    this.selectModel(e.target.value);
+                });
+                
+                this.newChatBtn.addEventListener('click', () => this.newChat());
+                
+                document.addEventListener('click', () => {
+                    this.hideModelDropdown();
                 });
             }
             
             async loadModels() {
                 try {
-                    this.updateConnectionStatus('loading', 'Loading...');
-                    
                     const response = await fetch('/api/models');
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -755,22 +622,25 @@
                     }
                     
                     this.models = data.models || [];
+                    this.populateModelSelectors();
                     
-                    this.populateModelSelect();
-                    this.updateConnectionStatus('online', 'Connected');
+                    // Select first model by default
+                    if (this.models.length > 0) {
+                        this.selectModel(this.models[0].id);
+                    }
                     
                 } catch (error) {
                     console.error('Failed to load models:', error);
-                    this.updateConnectionStatus('offline', 'Offline');
                     this.showError(`Failed to connect to AI services: ${error.message}`);
                 }
             }
             
-            populateModelSelect() {
-                this.modelSelect.innerHTML = '';
+            populateModelSelectors() {
+                // Populate header dropdown
+                this.headerModelSelect.innerHTML = '';
                 
                 if (this.models.length === 0) {
-                    this.modelSelect.innerHTML = '<option value="">No models available</option>';
+                    this.headerModelSelect.innerHTML = '<option value="">No models available</option>';
                     return;
                 }
                 
@@ -778,42 +648,76 @@
                     const option = document.createElement('option');
                     option.value = model.id;
                     option.textContent = model.name;
-                    this.modelSelect.appendChild(option);
+                    this.headerModelSelect.appendChild(option);
                 });
                 
-                // Select first model by default
-                if (this.models.length > 0) {
-                    this.currentModel = this.models[0].id;
-                    this.modelSelect.value = this.currentModel;
-                    this.updateModelInfo();
-                }
+                // Populate input dropdown
+                this.modelDropdown.innerHTML = '';
+                this.models.forEach(model => {
+                    const option = document.createElement('div');
+                    option.className = 'model-option';
+                    option.dataset.modelId = model.id;
+                    
+                    const iconColors = {
+                        'deepseek-r1': '#ff6b6b',
+                        'llama-3': '#4ecdc4',
+                        'gpt-3.5': '#45b7d1'
+                    };
+                    
+                    const iconEmojis = {
+                        'deepseek-r1': '🧠',
+                        'llama-3': '🦙',
+                        'gpt-3.5': '🤖'
+                    };
+                    
+                    option.innerHTML = `
+                        <div class="model-option-icon" style="background: ${iconColors[model.id] || '#10a37f'}">
+                            ${iconEmojis[model.id] || 'AI'}
+                        </div>
+                        <div class="model-option-info">
+                            <div class="model-option-name">${model.name}</div>
+                            <div class="model-option-provider">${model.provider}</div>
+                        </div>
+                    `;
+                    
+                    option.addEventListener('click', () => {
+                        this.selectModel(model.id);
+                        this.hideModelDropdown();
+                    });
+                    
+                    this.modelDropdown.appendChild(option);
+                });
             }
             
             selectModel(modelId) {
                 this.currentModel = modelId;
-                this.updateModelInfo();
-            }
-            
-            updateModelInfo() {
-                const model = this.models.find(m => m.id === this.currentModel);
+                const model = this.models.find(m => m.id === modelId);
+                
                 if (model) {
-                    this.modelInfo.innerHTML = `
-                        <div class="model-name">${model.name}</div>
-                        <div class="model-provider">${model.provider}</div>
-                        <div class="model-details">Model: ${model.model}</div>
-                    `;
-                    this.currentModelNameEl.textContent = model.model;
-                } else {
-                    this.currentModelNameEl.textContent = 'None';
+                    this.headerModelSelect.value = modelId;
+                    
+                    const iconEmojis = {
+                        'deepseek-r1': '🧠',
+                        'llama-3': '🦙',
+                        'gpt-3.5': '🤖'
+                    };
+                    
+                    this.modelIcon.textContent = iconEmojis[model.id] || 'AI';
+                    this.modelName.textContent = model.name.replace(/^[🧠🦙🤖]\s*/, '');
+                    
+                    // Update selected state in dropdown
+                    document.querySelectorAll('.model-option').forEach(option => {
+                        option.classList.toggle('selected', option.dataset.modelId === modelId);
+                    });
                 }
             }
             
-            updateConnectionStatus(status, text) {
-                const statusClass = `status-${status}`;
-                this.connectionStatus.innerHTML = `
-                    ${text}
-                    <span class="status-indicator ${statusClass}"></span>
-                `;
+            toggleModelDropdown() {
+                this.modelDropdown.classList.toggle('show');
+            }
+            
+            hideModelDropdown() {
+                this.modelDropdown.classList.remove('show');
             }
             
             async sendMessage() {
@@ -825,18 +729,19 @@
                     return;
                 }
                 
-                // Hide welcome screen
-                this.welcomeScreen.style.display = 'none';
+                // Hide welcome section and show chat
+                this.welcomeSection.style.display = 'none';
+                this.chatMessages.style.display = 'block';
                 
                 // Add user message
                 this.addMessage('user', message);
                 this.messageInput.value = '';
                 this.autoResize();
+                this.updateSendButton();
                 
                 // Show typing indicator
                 this.showTypingIndicator();
                 this.isLoading = true;
-                this.updateSendButton();
                 
                 try {
                     const response = await fetch('/api/chat', {
@@ -871,21 +776,14 @@
                     this.showError(`Failed to get response: ${error.message}`);
                 } finally {
                     this.isLoading = false;
-                    this.updateSendButton();
                 }
             }
             
             addMessage(role, content) {
                 this.messages.push({ role, content });
-                this.messageCount++;
-                this.messageCountEl.textContent = this.messageCount;
                 
                 const messageEl = document.createElement('div');
                 messageEl.className = `message ${role}`;
-                
-                const avatar = document.createElement('div');
-                avatar.className = 'message-avatar';
-                avatar.textContent = role === 'user' ? 'U' : 'AI';
                 
                 const messageContent = document.createElement('div');
                 messageContent.className = 'message-content';
@@ -896,20 +794,17 @@
                     messageContent.textContent = content;
                 }
                 
-                messageEl.appendChild(avatar);
                 messageEl.appendChild(messageContent);
-                
-                this.chatContainer.appendChild(messageEl);
+                this.chatMessages.appendChild(messageEl);
                 this.scrollToBottom();
             }
             
             formatMessage(content) {
-                // Simple markdown-like formatting
                 return content
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/`(.*?)`/g, '<code>$1</code>')
-                    .replace(/\`\`\`([\s\S]*?)\`\`\`/g, '<pre><code>$1</code></pre>')
+                    .replace(/`(.*?)`/g, '<code style="background: #404040; padding: 2px 4px; border-radius: 4px;">$1</code>')
+                    .replace(/\`\`\`([\s\S]*?)\`\`\`/g, '<pre style="background: #404040; padding: 12px; border-radius: 8px; overflow-x: auto; margin: 8px 0;"><code>$1</code></pre>')
                     .replace(/\n/g, '<br>');
             }
             
@@ -918,20 +813,15 @@
                 typingEl.className = 'typing-indicator';
                 typingEl.id = 'typingIndicator';
                 
-                const avatar = document.createElement('div');
-                avatar.className = 'message-avatar';
-                avatar.textContent = 'AI';
-                avatar.style.background = 'var(--bg-tertiary)';
-                avatar.style.color = 'var(--text-primary)';
+                typingEl.innerHTML = `
+                    <div class="typing-content">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
                 
-                const dotsEl = document.createElement('div');
-                dotsEl.className = 'typing-dots';
-                dotsEl.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-                
-                typingEl.appendChild(avatar);
-                typingEl.appendChild(dotsEl);
-                
-                this.chatContainer.appendChild(typingEl);
+                this.chatMessages.appendChild(typingEl);
                 this.scrollToBottom();
             }
             
@@ -945,48 +835,26 @@
             showError(message) {
                 const errorEl = document.createElement('div');
                 errorEl.className = 'error-message';
-                errorEl.innerHTML = `⚠️ ${message}`;
-                this.chatContainer.appendChild(errorEl);
+                errorEl.textContent = `⚠️ ${message}`;
+                this.chatMessages.appendChild(errorEl);
                 this.scrollToBottom();
             }
             
             updateSendButton() {
-                this.sendBtn.disabled = this.isLoading;
-                this.sendBtn.innerHTML = this.isLoading ? '⏳' : '➤';
+                const hasText = this.messageInput.value.trim().length > 0;
+                this.sendButton.classList.toggle('active', hasText && !this.isLoading);
             }
             
             autoResize() {
                 this.messageInput.style.height = 'auto';
-                this.messageInput.style.height = Math.min(this.messageInput.scrollHeight, 150) + 'px';
+                this.messageInput.style.height = Math.min(this.messageInput.scrollHeight, 120) + 'px';
             }
             
-            clearChat() {
+            newChat() {
                 this.messages = [];
-                this.messageCount = 0;
-                this.messageCountEl.textContent = '0';
-                
-                // Remove all messages and errors
-                const messages = this.chatContainer.querySelectorAll('.message, .error-message, .typing-indicator');
-                messages.forEach(msg => msg.remove());
-                
-                // Show welcome screen
-                this.welcomeScreen.style.display = 'flex';
-            }
-            
-            toggleTheme() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                
-                this.toggleThemeBtn.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
-            }
-            
-            loadTheme() {
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                this.toggleThemeBtn.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+                this.chatMessages.innerHTML = '';
+                this.chatMessages.style.display = 'none';
+                this.welcomeSection.style.display = 'block';
             }
             
             scrollToBottom() {
