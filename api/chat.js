@@ -17,7 +17,7 @@ export default async function handler(req) {
   try {
     const body = await req.json();
 
-    const groqResponse = await fetch('https://api.a4f.co/v1/images/generations', {
+    const groqResponse = await fetch('https://api.a4f.co/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
