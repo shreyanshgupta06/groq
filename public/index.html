@@ -526,8 +526,7 @@
       const fileUploadInput = document.getElementById("file-upload");
 
       // Groq API Configuration
-      const API_KEY = "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"; // Replace with your Groq API key from https://console.groq.com/keys
-      const MODEL = "llama3-70b-8192";
+      const MODEL = "provider-4/claude-3.7-sonnet";
       const GROK = "/api/chat";
       const API_URL = "/api/chat";
 
@@ -732,7 +731,7 @@
             headers: {
               Authorization: `Bearer ${GROK}`,
               "Content-Type": "application/json",
-              "x-groq-api-key": API_KEY
+              "x-groq-api-key": GROK
             },
             body: JSON.stringify({
               model: MODEL,
