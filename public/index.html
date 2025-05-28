@@ -485,7 +485,7 @@
     <div class="messages" id="messages">
       <div class="intro-message">
         <h1>Welcome to Shreyansh Cloud</h1>
-        <p>Ask me anything. I'm powered by ShreyanshCloud v2.3.</p>
+        <p>Ask me anything. I'm powered by Shreyansh Cloud v2.3</p>
         <div class="suggestion-chips">
           <button class="suggestion-chip">Tell me a story</button>
           <button class="suggestion-chip">Explain quantum computing</button>
@@ -525,7 +525,7 @@
       const fileUploadButton = document.getElementById("file-upload-button");
       const fileUploadInput = document.getElementById("file-upload");
 
-      // ShreyanshCloud v2.3 API Configuration
+      // Groq API Configuration
       const MODEL = "provider-4/claude-3.7-sonnet";
       const GROK = "/api/chat";
       const API_URL = "/api/chat";
@@ -731,7 +731,7 @@
             headers: {
               Authorization: `Bearer ${GROK}`,
               "Content-Type": "application/json",
-              "x-ShreyanshCloud v2.3-api-key": GROK
+              "x-groq-api-key": GROK
             },
             body: JSON.stringify({
               model: MODEL,
@@ -742,7 +742,7 @@
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error?.message || "Failed to get response from ShreyanshCloud v2.3 API");
+            throw new Error(errorData.error?.message || "Failed to get response from Cloud-SDK");
           }
 
           const messageDiv = document.createElement("div");
@@ -818,7 +818,7 @@
         } catch (error) {
           isTyping = false;
           removeTypingIndicator();
-          console.error("ShreyanshCloud v2.3 API Error:", error);
+          console.error("Cloud-SDK API Error:", error);
           throw error;
         }
       }
